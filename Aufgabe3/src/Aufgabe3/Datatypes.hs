@@ -5,6 +5,10 @@ module Aufgabe3.Datatypes
     , Tour (..)
     , TourSet (..)
     , tourAnwenden
+    , tourSetAusListe
+    , Auftragsbuch
+    , auftragsbuchAlsListe
+    , auftragsbuchAusListe
   )
   where
 
@@ -19,7 +23,7 @@ data Wochentag
   | Donnerstag
   | Freitag
   | Samstag
-  | Sonntag
+-- | Sonntag -- da wird nicht gearbeitet
   deriving (Show,Eq,Enum,Bounded,Ord)
 
 data Lager = LagerA | LagerB | LagerC
@@ -51,6 +55,10 @@ tourAnwenden (Tour LagerC LagerA f) set = set { cZuA = cZuA set + f}
 tourAnwenden (Tour LagerC LagerB f) set = set { cZuB = cZuB set + f}
 tourAnwenden _                      set = set -- start == ziel
 
+tourSetAusListe :: [Int] -> TourSet
+tourSetAusListe [ab,ac,ba,bc,ca,cb] = Tour ab ac ba bc ca cb
+tourSetAusListe _ = error $ "Aufgabe3.Datatypes.tourSetAusListe: Ungültige Eingabe"
+
 -- Auf diese Weise ist die Struktur einfacher
 data Auftragsbuch = Auftragsbuch
   { montags     :: TourSet
@@ -59,10 +67,14 @@ data Auftragsbuch = Auftragsbuch
   , donnerstags :: TourSet
   , freitags    :: TourSet
   , samstags    :: TourSet
-  , sonntags    :: TourSet
   } deriving (Show,Eq)
 
 -- Zur Iteration über die Wochentage, etc.
 auftragsbuchAlsListe :: Auftragsbuch -> [TourSet]
 auftragsbuchAlsListe buch = map ($ buch) -- Endlich mal ein Zweck für ($)!
-  [montags,dienstags,mittwochs,donnerstags,freitags,samstags,sonntags]
+  [montags,dienstags,mittwochs,donnerstags,freitags,samstags]
+
+auftragsbuchAusListe :: [TourSet] -> Auftragsbuch
+auftragsbuchAusListe [mo,di,mi,dO,fr,sa] = Auftragsbuch mo di mi dO fr sa
+auftragsbuchAusListe _ = error $ "Aufgabe3.Datatypes.auftragsbuchAusListe: " ++
+  "Ungültige Eingabe"

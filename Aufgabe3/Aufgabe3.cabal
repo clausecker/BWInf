@@ -6,15 +6,13 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: base -any
+build-depends: base -any, bytestring -any
 stability:
 homepage:
 package-url:
 bug-reports:
 synopsis:
-description:  
-             .
-             .
+description: .
              .
              .
 category:
