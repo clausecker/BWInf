@@ -15,8 +15,10 @@
 module Main (
 ) where
 
-import Aufgabe3.Datatypes
+import Aufgabe3.Algorithmen
 import Aufgabe3.IO
 
 main :: IO ()
-main = return ()
+main = do
+  ab <- auftragsbuchAusStdin
+  print ab

@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 module Aufgabe3.Datatypes
     ( Wochentag (..)
     , Lager (..)
@@ -36,12 +37,12 @@ data Tour = Tour
 
 -- Der folgende Datentyp wird gebraucht, um die Berechnung der Fahrten zu vereinfachen.
 data TourSet = TourSet
-  { aZuB :: Int
-  , aZuC :: Int
-  , bZuA :: Int
-  , bZuC :: Int
-  , cZuA :: Int
-  , cZuB :: Int
+  { aZuB :: !Int
+  , aZuC :: !Int
+  , bZuA :: !Int
+  , bZuC :: !Int
+  , cZuA :: !Int
+  , cZuB :: !Int
   } deriving (Show,Eq)
 
 -- Hilfsfunktion, wendet eine Tour auf das Set an.
@@ -60,12 +61,12 @@ tourSetAusListe _ = error $ "Aufgabe3.Datatypes.tourSetAusListe: Ungültige Eing
 
 -- Auf diese Weise ist die Struktur einfacher
 data Auftragsbuch = Auftragsbuch
-  { montags     :: TourSet
-  , dienstags   :: TourSet
-  , mittwochs   :: TourSet
-  , donnerstags :: TourSet
-  , freitags    :: TourSet
-  , samstags    :: TourSet
+  { montags     :: !TourSet
+  , dienstags   :: !TourSet
+  , mittwochs   :: !TourSet
+  , donnerstags :: !TourSet
+  , freitags    :: !TourSet
+  , samstags    :: !TourSet
   } deriving (Show,Eq)
 
 -- Zur Iteration über die Wochentage, etc.

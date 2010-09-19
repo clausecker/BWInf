@@ -1,4 +1,8 @@
-module Aufgabe3.IO where
+module Aufgabe3.IO
+  ( auftragsbuchAusByteString
+  , auftragsbuchAusDatei
+  , auftragsbuchAusStdin
+) where
 -- Funktionen, die zur Ein- und Ausgabe benötigt werden
 
 import Aufgabe3.Datatypes
@@ -27,3 +31,13 @@ tourSetAusByteString string = do
     "konnte nicht als Zahl verarbeitet werden.")
     (return . map fst) (mapM B.readInt wörter)
   return $ tourSetAusListe zahlen
+
+auftragsbuchAusDatei :: FilePath -> IO Auftragsbuch
+auftragsbuchAusDatei fp = do
+  file <- B.readFile fp
+  auftragsbuchAusByteString file
+
+auftragsbuchAusStdin :: IO Auftragsbuch
+auftragsbuchAusStdin = do
+  file <- B.getContents
+  auftragsbuchAusByteString file

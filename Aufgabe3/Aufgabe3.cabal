@@ -13,7 +13,6 @@ package-url:
 bug-reports:
 synopsis:
 description: .
-             .
 category:
 author:
 tested-with:
@@ -21,7 +20,8 @@ data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
-exposed-modules: Aufgabe3.Datatypes Aufgabe3.IO
+exposed-modules: Aufgabe3.Datatypes Aufgabe3.Algorithmen
+                 Aufgabe3.IO
 exposed: True
 buildable: True
 build-tools:
