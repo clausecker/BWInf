@@ -14,8 +14,6 @@ module Aufgabe3.Datatypes
 
 -- Typen, die vom Programm gebraucht werden.
 
-import Control.Exception (assert)
-
 data Wochentag
   = Montag
   | Dienstag
@@ -23,8 +21,9 @@ data Wochentag
   | Donnerstag
   | Freitag
   | Samstag
--- | Sonntag -- da wird nicht gearbeitet
   deriving (Show,Eq,Enum,Bounded,Ord)
+--  Sonntag -- da wird nicht gearbeitet
+
 
 data Lager = LagerA | LagerB | LagerC
   deriving (Show,Eq,Enum,Bounded,Ord)
@@ -56,7 +55,7 @@ tourAnwenden (Tour LagerC LagerB f) set = set { cZuB = cZuB set + f}
 tourAnwenden _                      set = set -- start == ziel
 
 tourSetAusListe :: [Int] -> TourSet
-tourSetAusListe [ab,ac,ba,bc,ca,cb] = Tour ab ac ba bc ca cb
+tourSetAusListe [ab,ac,ba,bc,ca,cb] = TourSet ab ac ba bc ca cb
 tourSetAusListe _ = error $ "Aufgabe3.Datatypes.tourSetAusListe: Ungültige Eingabe"
 
 -- Auf diese Weise ist die Struktur einfacher
