@@ -1,0 +1,8 @@
+Es sollte genau ein Fahrzeug an Lager A benötigt sein.
+#  A->B A->C  B->A B->C C->A C->B
+1 0 0 0 0 0
+0 0 0 1 0 0
+0 0 0 0 0 1
+0 0 1 0 0 0
+0 1 0 0 0 0
+0 0 0 0 1 0

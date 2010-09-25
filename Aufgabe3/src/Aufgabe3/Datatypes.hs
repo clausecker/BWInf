@@ -7,7 +7,7 @@ module Aufgabe3.Datatypes
     , TourSet (..)
     , tourAnwenden
     , tourSetAusListe
-    , Auftragsbuch
+    , Auftragsbuch (..)
     , auftragsbuchAlsListe
     , auftragsbuchAusListe
   )

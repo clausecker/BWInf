@@ -7,7 +7,7 @@ module Aufgabe3.IO
 
 import Aufgabe3.Datatypes
 import qualified Data.ByteString.Lazy.Char8 as B
-import System.IO
+--import System.IO
 import Control.Monad (when)
 
 -- Wir brauchen die fail Funktion.
@@ -35,9 +35,11 @@ tourSetAusByteString string = do
 auftragsbuchAusDatei :: FilePath -> IO Auftragsbuch
 auftragsbuchAusDatei fp = do
   file <- B.readFile fp
-  auftragsbuchAusByteString file
+  ab <- auftragsbuchAusByteString file
+  ab `seq` return ab
 
 auftragsbuchAusStdin :: IO Auftragsbuch
 auftragsbuchAusStdin = do
   file <- B.getContents
-  auftragsbuchAusByteString file
+  ab <- auftragsbuchAusByteString file
+  ab `seq` return ab

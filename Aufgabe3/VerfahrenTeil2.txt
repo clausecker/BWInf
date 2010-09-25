@@ -1,0 +1,4 @@
+Idee:
+
+Baue eine Liste und verwende Breitensuche, um den Suchbaum zu bearbeiten. Ziel
+ist geschickter Aufbau des Suchbaums, um Dubletten zu vermeiden.

@@ -6,7 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: base -any, bytestring -any
+build-depends: base -any, bytestring -any, containers -any,
+               mtl -any
 stability:
 homepage:
 package-url:
