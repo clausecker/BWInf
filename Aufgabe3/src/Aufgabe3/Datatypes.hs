@@ -35,7 +35,8 @@ data Tour = Tour
   , fahrten :: Int -- Anzahl der Fahrzeuge, die fahren.
   } deriving (Show,Eq)
 
--- Der folgende Datentyp wird gebraucht, um die Berechnung der Fahrten zu vereinfachen.
+-- Der folgende Datentyp wird gebraucht, um die Berechnung der Fahrten zu
+-- vereinfachen.
 data TourSet = TourSet
   { aZuB :: !Int
   , aZuC :: !Int
@@ -43,7 +44,7 @@ data TourSet = TourSet
   , bZuC :: !Int
   , cZuA :: !Int
   , cZuB :: !Int
-  } deriving (Show,Eq)
+  } deriving (Show,Eq,Ord)
 
 -- Hilfsfunktion, wendet eine Tour auf das Set an.
 tourAnwenden :: Tour -> TourSet -> TourSet
@@ -67,7 +68,7 @@ data Auftragsbuch = Auftragsbuch
   , donnerstags :: !TourSet
   , freitags    :: !TourSet
   , samstags    :: !TourSet
-  } deriving (Show,Eq)
+  } deriving (Show,Eq,Ord)
 
 -- Zur Iteration über die Wochentage, etc.
 auftragsbuchAlsListe :: Auftragsbuch -> [TourSet]
