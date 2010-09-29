@@ -1,0 +1,34 @@
+Hinweise zur Compilierung:
+
+Es werden folgende Programme für die jeweiligen Komponenten gebraucht:
+
+Programm:
+
+ - Haskell Platform ODER
+   - GHC
+   - Paket bytestring
+   - Paket containers
+   - Paket mtl
+   - (Buildsystem Cabal - Compilierung auch ohne dieses Möglich)
+
+Dokumentation:
+
+ - LaTeX
+ - Python
+ - Pygmentize
+
+Der folgende Befehl baut das Programm:
+
+  cabal configure ; cabal build
+
+Die fertige Datei findet sich dann im Ordner dist.
+
+Falls Cabal nicht vorhanden ist, kann man folgendes Kommando im Verzeichnis src
+ausführen, um das Programm zu bauen:
+
+  ghc -O3 -o ../dist/Aufgabe3 --make -Wall Main.hs
+
+Folgende Befehle bauen die Dokumentation:
+
+  ./hightlighter.py <doc.tex.lhs >doc.tex
+  pdflatex doc.tex
