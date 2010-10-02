@@ -4,3 +4,9 @@ dist/*
 src/Main
 
 #Aufgabe3
+
+#Dokumentation
+doc/*.hs.tex
+doc/*.aux
+doc/*.log
+doc/*.pdf

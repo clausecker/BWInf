@@ -65,21 +65,50 @@ Folgende Ans"atze halte ich f"ur möglich:
 \item Brute Force
 \item Darstellung aller m"oglicher Ver"anderungen als Suchbaum und dann Suche
 nach bester Wahl mit geeignetem Verfahren.
-\item M"oglicherweise komplexer
+\item M"oglicherweise komplexer, aber sytematischer Ansatz, der sehr schnell
+la"uft.
 \end{itemize}
+Diese habe ich nach verschiedenen Kriterien (Laufzeitkomplexit"at, Komplexit"at
+de Implementierung, \dots ) bewertet.
 
+\section{Implementierter Algorithmus}
+Ich habe mich am Ende f"ur die \emph{Brute Force}-L"osung entschieden, weil
+diese vergleichsweise einfach zu implementieren ist.  Die hohe
+Laufzeitkomplexit"at spielt aufgrund des geringen Ausma"ses des Problems nur
+eine untergeordnete Rolle.
+
+Das Verfahren besteht darin, zu untersuchen, wie sich die Hinzuf"ugung einzelner
+Fahrten auf die Anzahl der n"otigen Fahrzeuge auswirkt.  Dazu wird von einer
+Generatorfunktion eine Liste aller m"oglichen Auftragsb"ucher nach Hinzuf"ugung
+\emph{einer} Fahrt generiert, die dann bewertet wird.  Alle Permutationen, die
+mehr Fahrten ben"oetigen, werden nicht weiter verfolgt.  Bei Auftragsb"uchern,
+die die gleiche Anzahl an Fahrzeugen ben"otigen, wird anhand der Parameter
+entschieden.  Wenn die Anzahl der Fahrzeuge hingegen sinkt, so wird jenes Buch
+in jedem Fall weiterverfolgt.
+
+Dies wird Rekursiv durchgef"uhrt, eine Rekursionsebene ruft die Funktion zur
+Optimierung der n"achsten Permutation nach o.\,g. Kriterien auf, und liefert das
+beste Auftragsbuch zur"uck.
+
+\subsection {Parameter}
+Der Optimierungsalgorithmus wird "uber die Parameter $s$ und $i$ gesteuert. Der
+Parameter $s$ steuert dabei, wie Tief bei gleichgro"ser Fahrzeugzahl abgestiegen
+werden darf und der Parameter $i$ steuert die maximale Rekursionstiefe
+ausgenommen jener Auftragsb"ucher, die die Anzahl der Fahrzeuge aufbessern.
+
+%Nicht vergessen: Wieder einkommentieren wenn funktionsfähig!!!
 \chapter{Quelltexte}
 
 \section{\texttt{Aufgabe3/Datatypes.hs}}
-\include{Datatypes.hs.tex}
+%\include{Datatypes.hs}
 
 \section{\texttt{Aufgabe3/Algorithmen.hs}}
-\include{Algorithmen.hs.tex}
+%\include{Algorithmen.hs}
 
 \section{\texttt{Aufgabe3/IO.hs}}
-\include{IO.hs.tex}
+%\include{IO.hs}
 
 \section{\texttt{Main.hs}}
-\include{Main.hs.tex}
+%\include{Main.hs}
 
 \end{document}

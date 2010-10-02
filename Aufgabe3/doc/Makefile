@@ -1,30 +1,32 @@
 #!/usr/bin/make -f
-doc: doc.pdf
 
 HIGHLIGHTED_FILES = \
   Main.hs.tex\
   IO.hs.tex\
   Algorithmen.hs.tex\
   Datatypes.hs.tex
+
 PYGMENTIZE = pygmentize
 PYGMENTIZE_OPTS = -O style=bw
-LN = ln -s
+
+PDFLATEX = pdflatex
+
+PDFLATEX_OPTS =
+
+doc: doc.pdf
 
 doc.pdf: doc.tex $(HIGHLIGHTED_FILES)
-	pdflatex doc.tex
+	$(PDFLATEX) $(PDFLATEX_OPTS) doc.tex
 
 .PHONY: clean
 
 clean:
-	$(RM) *.pdf *.hs *.hs.tex *.aux *.log
+	$(RM) *.pdf *.hs.tex *.aux *.log
 
-%.hs.tex: %.hs
+Main.hs.tex: ../src/Main.hs
 	$(PYGMENTIZE) $(PYGMENTIZE_OPTS) -o $@ $<
 
-Main.hs:
-	$(LN) ../src/Main.hs
-
-%.hs:
-	$(LN) ../src/Aufgabe3/$@
+%.hs.tex: ../src/Aufgabe3/%.hs
+	$(PYGMENTIZE) $(PYGMENTIZE_OPTS) -o $@ $<
 
 
