@@ -3,10 +3,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage {ngerman}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
 
 \author {Robert Clausecker -- Team "`Herder"'}
 \title {L"osung zur Aufgabe 3}
 \subtitle {des 29. Bundeswettbewerbs Informatik}
+
+%Definitionen für den Formatierer
+\include{definitions.tex}
+
 \begin{document}
 \maketitle
 
@@ -44,6 +50,36 @@ lie"se sich der Algorithmus auch wesentlich generischer schreiben.
 
 Die Ausgabe der Funktion sind drei Tupel, f"ur jede Station einen.  Es werden
 allerdings nur die ersten Werte der Tupel gebraucht, der Rest wird am Ende
-verworfen. Die Anzahl der nun wirklich beno"tigten Fahrzeuge ist die Summe jener
+verworfen. Die Anzahl der nun wirklich ben"otigten Fahrzeuge ist die Summe jener
 drei Werte.
+
+\chapter{Teilaufgabe 2: Mit Leerfahrten}
+
+\section{M"ogliche Verfahren}
+Bevor ich mit der L"osung begann, habe ich über verschiedene Verfahren
+res"umiert, wie man die Optimierungen m"oglichst effizient durchführen kann.
+Folgende Ans"atze halte ich f"ur möglich:
+
+\begin{itemize}
+\item Genetischer Algorithmus
+\item Brute Force
+\item Darstellung aller m"oglicher Ver"anderungen als Suchbaum und dann Suche
+nach bester Wahl mit geeignetem Verfahren.
+\item M"oglicherweise komplexer
+\end{itemize}
+
+\chapter{Quelltexte}
+
+\section{\texttt{Aufgabe3/Datatypes.hs}}
+\include{Datatypes.hs.tex}
+
+\section{\texttt{Aufgabe3/Algorithmen.hs}}
+\include{Algorithmen.hs.tex}
+
+\section{\texttt{Aufgabe3/IO.hs}}
+\include{IO.hs.tex}
+
+\section{\texttt{Main.hs}}
+\include{Main.hs.tex}
+
 \end{document}
