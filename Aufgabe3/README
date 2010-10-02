@@ -28,7 +28,7 @@ ausführen, um das Programm zu bauen:
 
   ghc -O3 -o ../dist/Aufgabe3 --make -Wall Main.hs
 
-Folgende Befehle bauen die Dokumentation:
+Für die Dokumentation existiert ein Makefile, das Target "doc" baut die Dokumen-
+tation als PDF-Datei:
 
-  ./hightlighter.py <doc.tex.lhs >doc.tex
-  pdflatex doc.tex
+  cd doc; make
