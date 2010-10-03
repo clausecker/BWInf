@@ -8,7 +8,7 @@ HIGHLIGHTED_FILES = \
 
 PYGMENTIZE = pygmentize
 HIGHLIGHT_STYLE = bw
-PYGMENTIZE_OPTS = -O style=$(HIGHLIGHT_STYLE),encoding=utf-8
+PYGMENTIZE_OPTS =
 
 PDFLATEX = pdflatex
 

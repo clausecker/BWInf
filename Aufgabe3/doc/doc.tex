@@ -111,7 +111,53 @@ meist in Grenzen und es werden hinreichend gute Optimierungen gefunden.  Unter
 Verwendung dieser Parameter dauert die Optimierung der Test-Dateien zwischen 5-
 und 20\ Sekunden.
 
-%Nicht vergessen: Wieder einkommentieren wenn funktionsfähig!!!
+\chapter{Verwendung des Programms}
+
+\section{Parameter}
+Das Programm kennt folgende Parameter:
+
+\begin{verbatim}
+Aufgabe3 [-1] [-2 [-s x] [-i x]] [-o Ausgabedatei] [Eingabedatei]
+\end{verbatim}
+
+Sollte der Parameter \texttt{-o} nicht gegeben sein, so auf die Standardausgabe
+geschrieben, sollte keine Eingabedatei gegeben sein, so wird aus der
+Standardingabe gelesen.
+
+Die Parameter \texttt{-s} und \texttt{-i} steuern die zugeh"origen Parameter des
+Optimierungsalgorithmus, Standardwerte sind $s := 1$ und $i := 3$. Die Parameter
+\texttt{-1} und \texttt{-2} steuern, welche Teile der Aufgabe berechnet werden
+sollen.
+
+\section{Eingabeformat}
+Das Programm akzeptiert Eingabedateien, die so formatiert sind wie die vom
+Komitee bereitgestellten Testdateien.  Ung"ultige Dateien sorgen f"ur einen
+Laufzeitfehler.
+
+\section{Ausgabeformat}
+Das Ausgabeformat gleicht dem Eingabeformat.  Die L"osung der 1.\ Teilaufgabe
+wird folgenderma"sen ausgegeben, \texttt{\#\#\#} ist hierbei ein Platzhalter
+f"ur die Anzahl der n"otigen Fahrzeuge:
+
+\begin{verbatim}
+#Teilaufgabe 1:
+#Benötigte Fahrzeuge:
+#Lager 1: ###
+#Lager 2: ###
+#Lager 3: ###
+#Gesamt:  ###
+\end{verbatim}
+
+Die L"osung der 2.\ Teilaufgabe gibt zuerst den Kommentar \texttt{\#Teilaufgabe\ 
+2} aus, anschlie"send folgt eine Darstellung der Touren inklusive Leerfahrten
+im selben Format wie die Eingabe.  Zum Schluss wird die Anzahl der nun
+ben"otigten Fahrzeuge im selben Format wie oben angegeben.
+
+Sollte ein Aufgabenteil nicht berechnet werden, so wird die zugeh"orige L"osung
+nicht in der Ausgabe enthalten sein, d.\,H. es wird nur der oben beschriebene
+Teil ausgegeben.
+
+
 \chapter{Quelltexte}
 
 \section{Aufgabe3/Datatypes.hs}
