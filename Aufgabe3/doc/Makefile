@@ -33,7 +33,7 @@ definitions.tex:
 clean:
 	$(RM) *.pdf *.hs.tex *.aux *.log definitions.tex
 
-#Da Main.hs im anderen Ordner liegt, ist ein extra Traget notwendig.
+#Da Main.hs im anderen Ordner liegt, ist ein extra Target notwendig.
 Main.hs.tex: ../src/Main.hs
 	$(PYGMENTIZE) $(PYGMENTIZE_OPTS) -o $@ $<
 

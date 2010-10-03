@@ -32,12 +32,12 @@ main = do
   putStrLn "Repräsentation der Eingabedaten:"
   print ab
   putStrLn "Anzahl der benötigten Fahrzeuge:"
-  let (a,b,c) = benötigteFahrzeuge ab
+  let (a,b,c) = benoetigteFahrzeuge ab
   printf "Lager A: %3d\nLager B: %3d\nLager C: %3d\n" a b c
   printf "Insgesamt: %4d\n\n" (a + b + c)
   putStrLn "Optimiere..."
   let [s,i] = map read (take 2 args)
       ab' = optimiereFahrten s i ab
-      (a',b',c') = benötigteFahrzeuge ab'
+      (a',b',c') = benoetigteFahrzeuge ab'
   printf "Lager A: %3d\nLager B: %3d\nLager C: %3d\n" a' b' c'
   printf "Insgesamt: %4d\n\n" (a' + b' + c')

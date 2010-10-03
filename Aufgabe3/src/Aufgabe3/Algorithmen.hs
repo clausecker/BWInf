@@ -1,7 +1,7 @@
 {-# LANGUAGE TupleSections #-}
 module Aufgabe3.Algorithmen
-  ( benötigteFahrzeuge
-  , benötigteFahrzeugeGesamt
+  ( benoetigteFahrzeuge
+  , benoetigteFahrzeugeGesamt
   , optimiereFahrten
 ) where
 
@@ -24,8 +24,8 @@ wiederholt angewendet wird.
 
 -- Diese Funktion ist die Hälfte der Lösung der 1. Teilaufgabe
 -- Obwohl es möglich währe, diese zu generalisieren, lasse ich das bleiben.
-benötigteFahrzeuge :: Auftragsbuch -> (Int,Int,Int)
-benötigteFahrzeuge = (\((a,_),(b,_),(c,_)) -> (a,b,c))
+benoetigteFahrzeuge :: Auftragsbuch -> (Int,Int,Int)
+benoetigteFahrzeuge = (\((a,_),(b,_),(c,_)) -> (a,b,c))
   . foldl wendeTourSetAn ((0,0),(0,0),(0,0))
   . auftragsbuchAlsListe where
   -- (x,y) -> x: Anzahl der zu bestellenden Fahrzeuge,
@@ -44,11 +44,11 @@ benötigteFahrzeuge = (\((a,_),(b,_),(c,_)) -> (a,b,c))
     lagerB' = lagerUpdate lagerB (aZuB ts + cZuB ts) (bZuA ts + bZuC ts)
     lagerC' = lagerUpdate lagerC (aZuC ts + bZuC ts) (cZuA ts + cZuB ts)
 
-benötigteFahrzeugeGesamt :: Auftragsbuch -> Int
-benötigteFahrzeugeGesamt = (\(a,b,c) -> a + b + c) . benötigteFahrzeuge
+benoetigteFahrzeugeGesamt :: Auftragsbuch -> Int
+benoetigteFahrzeugeGesamt = (\(a,b,c) -> a + b + c) . benoetigteFahrzeuge
 
 bfgx :: Auftragsbuch -> (Auftragsbuch,Int)
-bfgx ab = (ab,benötigteFahrzeugeGesamt ab)
+bfgx ab = (ab,benoetigteFahrzeugeGesamt ab)
 
 {-
 Aufgabenteil 2:
@@ -95,38 +95,35 @@ optimiereFahrten' ::
 
 -- Rekursive Tiefensuche
 -- cs: current s
-optimiereFahrten' s cs i ausnahmen start@(ab,güte) = bestesErgebnis where
+optimiereFahrten' s cs i ausnahmen start@(ab,guete) = bestesErgebnis where
   -- Es kann angenommen werden, dass die Verbeserungen bereits analysiert wurden
-  analysierteÄnderungen =
-    filter ((`Set.notMember` ausnahmen) . fst) $ map bfgx $ möglicheÄnderungen ab
-  bessereÄnderungen = filter ((< güte) . snd) analysierteÄnderungen
+  analysierteAenderungen =
+    filter ((`Set.notMember` ausnahmen) . fst) $ map bfgx $ moeglicheAenderungen ab
+  bessereAenderungen = filter ((< guete) . snd) analysierteAenderungen
   -- Hängt von s ab
-  sonstigeÄnderungen = if cs == 0 || i <=  0 then []
-    else filter ((== güte) . snd) analysierteÄnderungen
+  sonstigeAenderungen = if cs == 0 || i <=  0 then []
+    else filter ((== guete) . snd) analysierteAenderungen
   ausnahmen' = foldl  -- Wir fügen nur die besseren Werte hinzu, da man so
     (flip Set.insert) -- erheblich Speicherplatz sparen kann
     ausnahmen
-    (map fst bessereÄnderungen)
+    (map fst bessereAenderungen)
   evaluierenUndVergleichen s' (vorschlag,set) neuer = (besserer,set') where
     (evaluiert,set') = optimiereFahrten' s s' (i - 1) set neuer
     besserer = if snd vorschlag < snd evaluiert then vorschlag else evaluiert
   (ergebnisBeste,ausnahmen'') = foldl -- Bester der sowieso besseren
     (evaluierenUndVergleichen s) -- s wird zurückgesetzt
     (start,ausnahmen')
-    bessereÄnderungen
+    bessereAenderungen
   (ergebnisSonstige,ausnahmen''') = foldl -- Bester der sonst besseren
     (evaluierenUndVergleichen (cs-1))
     (start,ausnahmen'')
-    sonstigeÄnderungen
+    sonstigeAenderungen
   bestesErgebnis = (,ausnahmen''') $ if snd ergebnisBeste < snd ergebnisSonstige
     then ergebnisBeste
     else ergebnisSonstige
--- Unendlicher Baum! Unnötig?
---optimierungsbaum :: Auftragsbuch -> Tree Auftragsbuch
---optimierungsbaum ab = Node ab (map optimierungsbaum $ möglicheÄnderungen ab)
 
-möglicheÄnderungen :: Auftragsbuch -> [Auftragsbuch]
-möglicheÄnderungen ab = nachWochentagen where
+moeglicheAenderungen :: Auftragsbuch -> [Auftragsbuch]
+moeglicheAenderungen ab = nachWochentagen where
   -- Wir brauchen uns um Montag und Samstag nicht kümmern, es ist egal
   -- wo die Autos am Anfang und Ende stehen.
   -- Boilerplate
