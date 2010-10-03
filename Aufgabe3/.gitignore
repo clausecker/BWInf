@@ -7,6 +7,8 @@ src/Main
 
 #Dokumentation
 doc/*.hs.tex
+doc/*.toc
 doc/*.aux
 doc/*.log
 doc/*.pdf
+doc/definitions.tex

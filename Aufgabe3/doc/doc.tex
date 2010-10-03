@@ -11,10 +11,13 @@
 \subtitle {des 29. Bundeswettbewerbs Informatik}
 
 %Definitionen für den Formatierer
-\include{definitions.tex}
+\include{definitions}
 
 \begin{document}
 \maketitle
+
+\tableofcontents \newpage
+
 
 \chapter {Teilaufgabe 1: Keine Optimierungen}
 
@@ -90,25 +93,37 @@ Dies wird Rekursiv durchgef"uhrt, eine Rekursionsebene ruft die Funktion zur
 Optimierung der n"achsten Permutation nach o.\,g. Kriterien auf, und liefert das
 beste Auftragsbuch zur"uck.
 
-\subsection {Parameter}
+\subsection{Parameter}
 Der Optimierungsalgorithmus wird "uber die Parameter $s$ und $i$ gesteuert. Der
 Parameter $s$ steuert dabei, wie Tief bei gleichgro"ser Fahrzeugzahl abgestiegen
 werden darf und der Parameter $i$ steuert die maximale Rekursionstiefe
 ausgenommen jener Auftragsb"ucher, die die Anzahl der Fahrzeuge aufbessern.
 
+\subsection{Einfluss der Parameter auf das Programm}
+Ich habe durch diverse Tests herausgefunden, dass f"ur einige Auftragsb"ucher
+die Parameter $s := 0,\ i := 0$ ausreichend sind, allerdings werden in diesem
+Fall nicht immer gute Ergebnisse erzielt.  Falls man jedoch $s := 1,\ i := 0$
+setzt, so braucht das Programm meist extrem lange zur Berechnung (Das ist auch
+der Grund, warum ich den Parameter $i$ eingef"uhrt habe).
+
+Eine gute Kombination scheint mir $s := 1,\ i := 3$, die Laufzeit hält sich so
+meist in Grenzen und es werden hinreichend gute Optimierungen gefunden.  Unter
+Verwendung dieser Parameter dauert die Optimierung der Test-Dateien c.\,a.
+20\ Sekunden.
+
 %Nicht vergessen: Wieder einkommentieren wenn funktionsfähig!!!
 \chapter{Quelltexte}
 
 \section{\texttt{Aufgabe3/Datatypes.hs}}
-%\include{Datatypes.hs}
+\include{Datatypes.hs}
 
 \section{\texttt{Aufgabe3/Algorithmen.hs}}
-%\include{Algorithmen.hs}
+\include{Algorithmen.hs}
 
 \section{\texttt{Aufgabe3/IO.hs}}
-%\include{IO.hs}
+\include{IO.hs}
 
 \section{\texttt{Main.hs}}
-%\include{Main.hs}
+\include{Main.hs}
 
 \end{document}

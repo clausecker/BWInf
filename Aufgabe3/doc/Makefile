@@ -7,26 +7,35 @@ HIGHLIGHTED_FILES = \
   Datatypes.hs.tex
 
 PYGMENTIZE = pygmentize
-PYGMENTIZE_OPTS = -O style=bw
+HIGHLIGHT_STYLE = bw
+PYGMENTIZE_OPTS = -O style=$(HIGHLIGHT_STYLE),encoding=utf-8
 
 PDFLATEX = pdflatex
 
-PDFLATEX_OPTS =
+PDFLATEX_OPTS = -halt-on-error
 
 doc: doc.pdf
 
-doc.pdf: doc.tex $(HIGHLIGHTED_FILES)
-	$(PDFLATEX) $(PDFLATEX_OPTS) doc.tex
+#Der log wird auch nach doc.log ausgegeben...
+doc.pdf: toc
+	$(PDFLATEX) $(PDFLATEX_OPTS) doc.tex > /dev/null
 
-.PHONY: clean
+#Die Datei muss zweimal gebaut werden, um das Inhaltsverzeichnis darzustellen
+toc: doc.tex definitions.tex $(HIGHLIGHTED_FILES)
+	$(PDFLATEX) -draftmode $(PDFLATEX_OPTS) doc.tex > /dev/null
+
+#Enthält den Vorspann der Pygments Befehle.
+definitions.tex:
+	$(PYGMENTIZE) -S $(HIGHLIGHT_STYLE) -f tex > $@
+
+.PHONY: clean toc
 
 clean:
-	$(RM) *.pdf *.hs.tex *.aux *.log
+	$(RM) *.pdf *.hs.tex *.aux *.log definitions.tex
 
+#Da Main.hs im anderen Ordner liegt, ist ein extra Traget notwendig.
 Main.hs.tex: ../src/Main.hs
 	$(PYGMENTIZE) $(PYGMENTIZE_OPTS) -o $@ $<
 
 %.hs.tex: ../src/Aufgabe3/%.hs
 	$(PYGMENTIZE) $(PYGMENTIZE_OPTS) -o $@ $<
-
-
