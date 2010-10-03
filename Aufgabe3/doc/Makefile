@@ -7,8 +7,8 @@ HIGHLIGHTED_FILES = \
   Datatypes.hs.tex
 
 PYGMENTIZE = pygmentize
-HIGHLIGHT_STYLE = bw
-PYGMENTIZE_OPTS =
+STYLE = borland
+PYGMENTIZE_OPTS = -O linenos
 
 PDFLATEX = pdflatex
 
@@ -26,7 +26,7 @@ toc: doc.tex definitions.tex $(HIGHLIGHTED_FILES)
 
 #Enthält den Vorspann der Pygments Befehle.
 definitions.tex:
-	$(PYGMENTIZE) -S $(HIGHLIGHT_STYLE) -f tex > $@
+	$(PYGMENTIZE) -S $(STYLE) -f tex > $@
 
 .PHONY: clean toc
 

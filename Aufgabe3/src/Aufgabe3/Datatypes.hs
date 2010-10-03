@@ -15,7 +15,7 @@ module Aufgabe3.Datatypes
 
 -- Typen, die vom Programm gebraucht werden.
 
-data Wochentag
+data Wochentag -- Sonntags wird nicht gearbeitet.
   = Montag
   | Dienstag
   | Mittwoch
@@ -23,8 +23,6 @@ data Wochentag
   | Freitag
   | Samstag
   deriving (Show,Eq,Enum,Bounded,Ord)
---  Sonntag -- da wird nicht gearbeitet
-
 
 data Lager = LagerA | LagerB | LagerC
   deriving (Show,Eq,Enum,Bounded,Ord)

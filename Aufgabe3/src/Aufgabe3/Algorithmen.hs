@@ -8,7 +8,6 @@ module Aufgabe3.Algorithmen
 -- Dieses Modul enthält die Algorithmen, mit denen das Problem gelöst wird.
 
 import Aufgabe3.Datatypes
---import Data.Tree
 import Control.Applicative ((<$>))
 import Data.Set (Set)
 import qualified Data.Set as Set
@@ -83,7 +82,6 @@ optimiereFahrten s i ab = fst $ fst $ optimiereFahrten'
 -- Hilfsfunktionen für Teil 2
 ----------
 
---Funktion zu Rekursionszwecken
 optimiereFahrten' ::
   Int -> -- Schwellwert
   Int -> -- aktueller Schwellwert
@@ -100,7 +98,6 @@ optimiereFahrten' s cs i ausnahmen start@(ab,guete) = bestesErgebnis where
   analysierteAenderungen =
     filter ((`Set.notMember` ausnahmen) . fst) $ map bfgx $ moeglicheAenderungen ab
   bessereAenderungen = filter ((< guete) . snd) analysierteAenderungen
-  -- Hängt von s ab
   sonstigeAenderungen = if cs == 0 || i <=  0 then []
     else filter ((== guete) . snd) analysierteAenderungen
   ausnahmen' = foldl  -- Wir fügen nur die besseren Werte hinzu, da man so
