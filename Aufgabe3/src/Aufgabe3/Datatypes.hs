@@ -2,11 +2,11 @@
 module Aufgabe3.Datatypes
     ( Wochentag (..)
     , Lager (..)
-
     , Tour (..)
     , TourSet (..)
     , tourAnwenden
     , tourSetAusListe
+    , tourSetAlsListe
     , Auftragsbuch (..)
     , auftragsbuchAlsListe
     , auftragsbuchAusListe
@@ -44,7 +44,10 @@ data TourSet = TourSet
   , bZuC :: !Int
   , cZuA :: !Int
   , cZuB :: !Int
-  } deriving (Show,Eq,Ord)
+  } deriving (Eq,Ord)
+
+instance Show TourSet where
+  show = unwords . map show . tourSetAlsListe
 
 -- Hilfsfunktion, wendet eine Tour auf das Set an.
 tourAnwenden :: Tour -> TourSet -> TourSet
@@ -60,6 +63,9 @@ tourSetAusListe :: [Int] -> TourSet
 tourSetAusListe [ab,ac,ba,bc,ca,cb] = TourSet ab ac ba bc ca cb
 tourSetAusListe _ = error $ "Aufgabe3.Datatypes.tourSetAusListe: Ungültige Eingabe"
 
+tourSetAlsListe :: TourSet -> [Int]
+tourSetAlsListe set = map ($ set) [aZuB, aZuC, bZuA, bZuC, cZuA, cZuB]
+
 -- Auf diese Weise ist die Struktur einfacher
 data Auftragsbuch = Auftragsbuch
   { montags     :: !TourSet
@@ -68,7 +74,10 @@ data Auftragsbuch = Auftragsbuch
   , donnerstags :: !TourSet
   , freitags    :: !TourSet
   , samstags    :: !TourSet
-  } deriving (Show,Eq,Ord)
+  } deriving (Eq,Ord)
+
+instance Show Auftragsbuch where
+  show = unlines . map show . auftragsbuchAlsListe
 
 -- Zur Iteration über die Wochentage, etc.
 auftragsbuchAlsListe :: Auftragsbuch -> [TourSet]

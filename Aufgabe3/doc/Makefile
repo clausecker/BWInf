@@ -31,7 +31,7 @@ definitions.tex:
 .PHONY: clean toc
 
 clean:
-	$(RM) *.pdf *.hs.tex *.aux *.log definitions.tex
+	$(RM) *.pdf *.hs.tex *.aux *.log definitions.tex *.toc
 
 #Da Main.hs im anderen Ordner liegt, ist ein extra Target notwendig.
 Main.hs.tex: ../src/Main.hs
