@@ -17,6 +17,16 @@ Dokumentation:
  - Python
  - Pygmentize
 
+Um die Compilierung einfacher zu gestalten, habe ich ein Makefile beigelegt.
+
+	make
+
+im obersten Verzeichnis baut automatisch den Quelltext und die Dokumentation.
+Ansonsten gibt es noch die Targets clean, doc, build und {doc,build}-clean. Ihre
+Funktion sollte selbsterklärend sein.
+
+Man kann auch die einzelnen Programmteile von Hand bauen:
+
 Der folgende Befehl baut das Programm:
 
   cabal configure ; cabal build
