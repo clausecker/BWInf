@@ -117,7 +117,7 @@ und 20\ Sekunden.
 Das Programm kennt folgende Parameter:
 
 \begin{verbatim}
-Aufgabe3 [-1] [-2 [-s x] [-i x]] [-o Ausgabedatei] [Eingabedatei]
+Aufgabe3 [-h] [-1] [-2 [-s x] [-i x]] [-o Ausgabedatei] [Eingabedatei]
 \end{verbatim}
 
 Sollte der Parameter \texttt{-o} nicht gegeben sein, so auf die Standardausgabe
@@ -128,6 +128,9 @@ Die Parameter \texttt{-s} und \texttt{-i} steuern die zugeh"origen Parameter des
 Optimierungsalgorithmus, Standardwerte sind $s := 1$ und $i := 3$. Die Parameter
 \texttt{-1} und \texttt{-2} steuern, welche Teile der Aufgabe berechnet werden
 sollen.
+
+Der Parameter \texttt{-h} (oder {texttt{-?}}) gibt eine kurze Zusammenfassung
+der m"oglichen Parameter aus und beendet das Programm anschlie"send.
 
 \section{Eingabeformat}
 Das Programm akzeptiert Eingabedateien, die so formatiert sind wie die vom
@@ -157,6 +160,256 @@ Sollte ein Aufgabenteil nicht berechnet werden, so wird die zugeh"orige L"osung
 nicht in der Ausgabe enthalten sein, d.\,H. es wird nur der oben beschriebene
 Teil ausgegeben.
 
+\chapter{Beispieleingaben}
+Im Folgenden werden die Ausgaben des Programms auf die Beispieleingaben gezeigt.
+Das Programm wurde stets mit folgenden Parametern gestartet:\footnote{Um die
+Befehlszeile zu vereinfachen, habe ich in den Beispielausgaben eine symbolische
+Verkn"upfung des Programmes in das Wurzelverzeichnis des Projektes gesetzt. Alle
+Befehlszeilen beziehen sich auf diese.}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistischX.txt +RTS -s
+\end{verbatim}
+
+Der Parameter \texttt{+RTS -s} schaltet dabei das Profiling ein und gibt eine
+detailierte Zusammenfassung "uber Speicherverbrauch, Laufzeit, etc. aus.  Die
+Profilinginformationen werden auf \texttt{stderr} ausgegeben, w"ahrend die
+normale Ausgabe des Programms "uber \texttt{stdout} l"auft, so lassen sich
+Ausgabe und Profiling einfach trennen.\footnote{Man kann auch \texttt{-s<file>}
+verwenden, das leitet die Ausgabe der Profilinginformationen entsprechend um.}
+
+\section{Material/logistisch1.txt}
+
+\subsection*{Befehlszeile}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch1.txt +RTS -s
+\end{verbatim}
+
+\subsection*{Ausgabe}
+
+\begin{verbatim}
+#Teilaufgabe 1:
+#Benötigte Fahrzeuge:
+#Lager 1:   3
+#Lager 2:  17
+#Lager 3:  25
+#Gesamt:   45
+#Teilaufgabe 2:
+1 2 3 4 5 6
+2 3 4 5 6 1
+3 4 5 6 7 8
+1 2 3 4 5 6
+1 2 3 4 5 6
+4 3 5 6 1 2
+
+#Benötigte Fahrzeuge:
+#Lager 1:   3
+#Lager 2:  17
+#Lager 3:  16
+#Gesamt:   36
+\end{verbatim}
+
+\subsection*{Profiling}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch1.txt +RTS -s 
+   1,626,406,928 bytes allocated in the heap
+      63,509,896 bytes copied during GC
+       2,276,552 bytes maximum residency (13 sample(s))
+         112,528 bytes maximum slop
+               7 MB total memory in use (0 MB lost due to fragmentation)
+
+  Generation 0:  3090 collections,     0 parallel,  0.22s,  0.16s elapsed
+  Generation 1:    13 collections,     0 parallel,  0.04s,  0.04s elapsed
+
+  INIT  time    0.01s  (  0.00s elapsed)
+  MUT   time    1.24s  (  1.34s elapsed)
+  GC    time    0.26s  (  0.19s elapsed)
+  EXIT  time    0.00s  (  0.00s elapsed)
+  Total time    1.51s  (  1.53s elapsed)
+
+  %GC time      17.2%  (12.6% elapsed)
+
+  Alloc rate    1,301,125,542 bytes per MUT second
+
+  Productivity  82.1% of total user, 81.0% of total elapsed
+\end{verbatim}
+
+\section{Material/logistisch2.txt}
+
+\subsection*{Befehlszeile}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch2.txt +RTS -s
+\end{verbatim}
+
+\subsection*{Ausgabe}
+
+\begin{verbatim}
+#Teilaufgabe 1:
+#Benötigte Fahrzeuge:
+#Lager 1:   6
+#Lager 2:  14
+#Lager 3:   6
+#Gesamt:   26
+#Teilaufgabe 2:
+2 3 2 1 4 2
+1 3 5 2 1 3
+1 3 1 1 3 1
+2 3 3 1 1 1
+4 0 2 7 1 4
+5 2 4 6 2 2
+
+#Benötigte Fahrzeuge:
+#Lager 1:   5
+#Lager 2:  12
+#Lager 3:   7
+#Gesamt:   24
+\end{verbatim}
+
+\subsection*{Profiling}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch2.txt +RTS -s 
+     144,593,320 bytes allocated in the heap
+       2,265,656 bytes copied during GC
+          55,848 bytes maximum residency (1 sample(s))
+          80,496 bytes maximum slop
+               2 MB total memory in use (0 MB lost due to fragmentation)
+
+  Generation 0:   275 collections,     0 parallel,  0.00s,  0.01s elapsed
+  Generation 1:     1 collections,     0 parallel,  0.00s,  0.00s elapsed
+
+  INIT  time    0.01s  (  0.00s elapsed)
+  MUT   time    0.11s  (  0.14s elapsed)
+  GC    time    0.00s  (  0.01s elapsed)
+  EXIT  time    0.00s  (  0.00s elapsed)
+  Total time    0.12s  (  0.15s elapsed)
+
+  %GC time       0.0%  (6.4% elapsed)
+
+  Alloc rate    1,204,944,333 bytes per MUT second
+
+  Productivity  91.7% of total user, 72.0% of total elapsed
+\end{verbatim}
+
+\section{Material/logistisch3.txt}
+
+\subsection*{Befehlszeile}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch3.txt +RTS -s
+\end{verbatim}
+
+\subsection*{Ausgabe}
+
+\begin{verbatim}
+#Teilaufgabe 1:
+#Benötigte Fahrzeuge:
+#Lager 1:   6
+#Lager 2:   6
+#Lager 3:   6
+#Gesamt:   18
+#Teilaufgabe 2:
+5 1 2 4 6 0
+6 2 0 5 5 0
+4 1 1 5 6 1
+7 0 1 4 6 0
+5 2 2 5 4 0
+5 1 0 5 6 1
+
+#Benötigte Fahrzeuge:
+#Lager 1:   6
+#Lager 2:   6
+#Lager 3:   6
+#Gesamt:   18
+\end{verbatim}
+
+\subsection*{Profiling}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch3.txt +RTS -s 
+         550,904 bytes allocated in the heap
+           6,968 bytes copied during GC
+          65,640 bytes maximum residency (1 sample(s))
+          44,952 bytes maximum slop
+               1 MB total memory in use (0 MB lost due to fragmentation)
+
+  Generation 0:     0 collections,     0 parallel,  0.00s,  0.00s elapsed
+  Generation 1:     1 collections,     0 parallel,  0.00s,  0.00s elapsed
+
+  INIT  time    0.01s  (  0.00s elapsed)
+  MUT   time    0.00s  (  0.02s elapsed)
+  GC    time    0.00s  (  0.00s elapsed)
+  EXIT  time    0.00s  (  0.00s elapsed)
+  Total time    0.01s  (  0.02s elapsed)
+
+  %GC time       0.0%  (1.4% elapsed)
+
+  Alloc rate    55,090,400 bytes per MUT second
+
+  Productivity   0.0% of total user, 0.0% of total elapsed
+\end{verbatim}
+
+
+\section{Material/logistisch3.txt}
+
+\subsection*{Befehlszeile}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch4.txt +RTS -s
+\end{verbatim}
+
+\subsection*{Ausgabe}
+
+\begin{verbatim}
+#Teilaufgabe 1:
+#Benötigte Fahrzeuge:
+#Lager 1:  51
+#Lager 2:   4
+#Lager 3:  12
+#Gesamt:   67
+#Teilaufgabe 2:
+2 1 1 3 3 2
+5 1 2 0 2 2
+3 15 6 1 3 4
+4 6 1 3 2 15
+8 6 2 11 1 6
+9 14 2 6 7 2
+
+#Benötigte Fahrzeuge:
+#Lager 1:  36
+#Lager 2:   4
+#Lager 3:  14
+#Gesamt:   54
+\end{verbatim}
+
+\subsection*{Profiling}
+
+\begin{verbatim}
+./Aufgabe3 -12 Material/logistisch4.txt +RTS -s 
+   6,537,336,896 bytes allocated in the heap
+     320,250,768 bytes copied during GC
+       9,880,136 bytes maximum residency (33 sample(s))
+         387,520 bytes maximum slop
+              28 MB total memory in use (0 MB lost due to fragmentation)
+
+  Generation 0: 12437 collections,     0 parallel,  0.74s,  0.66s elapsed
+  Generation 1:    33 collections,     0 parallel,  0.18s,  0.23s elapsed
+
+  INIT  time    0.01s  (  0.00s elapsed)
+  MUT   time    5.86s  (  5.97s elapsed)
+  GC    time    0.92s  (  0.89s elapsed)
+  EXIT  time    0.00s  (  0.00s elapsed)
+  Total time    6.79s  (  6.86s elapsed)
+
+  %GC time      13.5%  (13.0% elapsed)
+
+  Alloc rate    1,113,686,012 bytes per MUT second
+
+  Productivity  86.3% of total user, 85.4% of total elapsed
+\end{verbatim}
 
 \chapter{Quelltexte}
 

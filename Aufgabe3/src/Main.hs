@@ -105,3 +105,4 @@ main = do
         hPrintf outFile "#Benötigte Fahrzeuge:\n\
           \#Lager 1: %3d\n#Lager 2: %3d\n#Lager 3: %3d\n#Gesamt:  %3d\n"
           a' b' c' gesamt')
+  hFlush outFile
