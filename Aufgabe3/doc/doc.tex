@@ -6,7 +6,7 @@
 \usepackage{fancyvrb}
 \usepackage{xcolor}
 
-\author {Robert Clausecker -- Team "`Herder"'}
+\author {Team "`Herder"' -- Robert Clausecker}
 \title {L"osung zur Aufgabe 3}
 \subtitle {des 29. Bundeswettbewerbs Informatik}
 
@@ -22,11 +22,14 @@
 \chapter {Teilaufgabe 1: Keine Optimierungen}
 
 \section {Grundidee}
-Die Idee zur L"osung dieser Teilaufgabe ist es, pro Lager nachzuschauen, wie
-viele Fahrzeuge pro Tag an- bzw. abfahren.  Da ein Fahrzeug pro Tag genau eine
-Strecke zur"ucklegen darf, kann man nun eine Art Fahrzeugbestand f"uhren.
-Nachdem das Programm die Anzahl der an- und abfahrenden Fahrzeuge berechnet
-hat, wird diese in den aktuellen Fahrzeugbestand einberechnet.
+Die Grundidee der L"osung ist es, f"ur jede Station einen Fahrzeugbestand zu
+f"uhren, der die Anzahl der aktuell vorhandenen und zu bestellenden Fahrzeuge
+enth"alt.
+
+Anschlie"send wird jeden Tag errechnet, wie viele Fahrzeuge an- bzw. abfahren
+und in den Bestand eingerechnet (siehe unten). Nachdem man dies f"ur die Fahrten
+einer Woche durchgef"uhrt hat, kann man die Anzahl der n"otigen Fahrzeuge aus
+dem Bestand ablesen.
 
 \section {Algorithmus}
 Der Fahrzeugbestand wird als Paar nat"urlicher Zahlen dargestellt, die
@@ -49,10 +52,10 @@ Am Anfang der Woche wird mit einem Startwert von $(0,0)$ begonnen, die Liste der
 Fahrten nach Wochentagen wird dann von Montag bis Samstag mit der Funktion
 \texttt{foldl} gefaltet.  Der Einfachheit halber wurde der Algorithmus zur
 Bestimmung der An- und Abfahrten hart verdrahtet, mit geringerem Mehraufwand
-lie"se sich der Algorithmus auch wesentlich generischer schreiben.
+lie"se sich jeder auch wesentlich generischer schreiben.
 
-Die Ausgabe der Funktion sind drei Tupel, f"ur jede Station einen.  Es werden
-allerdings nur die ersten Werte der Tupel gebraucht, der Rest wird am Ende
+Die Ausgabe der Funktion sind die drei o.\,g. Tupel. F"ur das Gesamtergebnir
+werden aber nur die ersten Werte der Tupel gebraucht, der Rest wird am Ende
 verworfen. Die Anzahl der nun wirklich ben"otigten Fahrzeuge ist die Summe jener
 drei Werte.
 
@@ -72,21 +75,22 @@ nach bester Wahl mit geeignetem Verfahren.
 la"uft.
 \end{itemize}
 Diese habe ich nach verschiedenen Kriterien (Laufzeitkomplexit"at, Komplexit"at
-de Implementierung, \dots ) bewertet.
+de Implementierung,\,\dots ) bewertet.
 
 \section{Implementierter Algorithmus}
 Ich habe mich am Ende f"ur die \emph{Brute Force}-L"osung entschieden, weil
-diese vergleichsweise einfach zu implementieren ist.  Die hohe
-Laufzeitkomplexit"at spielt aufgrund des geringen Ausma"ses des Problems nur
-eine untergeordnete Rolle.
+diese vergleichsweise einfach zu implementieren ist.  Aufgrund der geringen 
+erwarteten Suchtiefe sollte die Zeitkomplexit"at nicht zu sehr ins Gewicht
+fallen.
 
 Das Verfahren besteht darin, zu untersuchen, wie sich die Hinzuf"ugung einzelner
 Fahrten auf die Anzahl der n"otigen Fahrzeuge auswirkt.  Dazu wird von einer
 Generatorfunktion eine Liste aller m"oglichen Auftragsb"ucher nach Hinzuf"ugung
 \emph{einer} Fahrt generiert, die dann bewertet wird.  Alle Permutationen, die
 mehr Fahrten ben"oetigen, werden nicht weiter verfolgt.  Bei Auftragsb"uchern,
-die die gleiche Anzahl an Fahrzeugen ben"otigen, wird anhand der Parameter
-entschieden.  Wenn die Anzahl der Fahrzeuge hingegen sinkt, so wird jenes Buch
+die die gleiche Anzahl an Fahrzeugen ben"otigen, also keine Optimierung
+darstellen, wird anhand der Parameter entschieden, ob die Permutation weiter
+verfolgt wird.  Wenn die Anzahl der Fahrzeuge hingegen sinkt, so wird jenes Buch
 in jedem Fall weiterverfolgt.
 
 Dies wird Rekursiv durchgef"uhrt, eine Rekursionsebene ruft die Funktion zur
@@ -95,7 +99,7 @@ beste Auftragsbuch zur"uck.
 
 \subsection{Parameter}
 Der Optimierungsalgorithmus wird "uber die Parameter $s$ und $i$ gesteuert. Der
-Parameter $s$ steuert dabei, wie Tief bei gleichgro"ser Fahrzeugzahl abgestiegen
+Parameter $s$ steuert dabei, wie tief bei gleichgro"ser Fahrzeugzahl abgestiegen
 werden darf und der Parameter $i$ steuert die maximale Rekursionstiefe
 ausgenommen jener Auftragsb"ucher, die die Anzahl der Fahrzeuge aufbessern.
 
@@ -117,7 +121,7 @@ und 10\ Sekunden.
 Das Programm kennt folgende Parameter:
 
 \begin{verbatim}
-Aufgabe3 [-h] [-1] [-2 [-s x] [-i x]] [-o Ausgabedatei] [Eingabedatei]
+Aufgabe3 [-1] [-2 [-s x] [-i x]] [-o Ausgabedatei] [Eingabedatei]
 \end{verbatim}
 
 Sollte der Parameter \texttt{-o} nicht gegeben sein, so auf die Standardausgabe
@@ -127,10 +131,9 @@ Standardingabe gelesen.
 Die Parameter \texttt{-s} und \texttt{-i} steuern die zugeh"origen Parameter des
 Optimierungsalgorithmus, Standardwerte sind $s := 1$ und $i := 3$. Die Parameter
 \texttt{-1} und \texttt{-2} steuern, welche Teile der Aufgabe berechnet werden
-sollen.
-
-Der Parameter \texttt{-h} (oder {\texttt{-?}}) gibt eine kurze Zusammenfassung
-der m"oglichen Parameter aus und beendet das Programm anschlie"send.
+sollen.\footnote{Es sind diverse Langformen der Parameter verf"ugbar.  Rufen Sie
+das Programm mit dem Parameter \texttt{-?} auf, um weitere Informationen zu
+erhalten.}
 
 \section{Eingabeformat}
 Das Programm akzeptiert Eingabedateien, die so formatiert sind wie die vom
@@ -160,7 +163,7 @@ Sollte ein Aufgabenteil nicht berechnet werden, so wird die zugeh"orige L"osung
 nicht in der Ausgabe enthalten sein, d.\,H. es wird nur der oben beschriebene
 Teil ausgegeben.
 
-\chapter{Beispieleingaben}
+\chapter{Beispiele}
 Im Folgenden werden die Ausgaben des Programms auf die Beispieleingaben gezeigt.
 Das Programm wurde stets mit folgenden Parametern gestartet:\footnote{Um die
 Befehlszeile zu vereinfachen, habe ich in den Beispielausgaben eine symbolische
@@ -171,20 +174,15 @@ Befehlszeilen beziehen sich auf diese.}
 ./Aufgabe3 -12 Material/logistischX.txt +RTS -s
 \end{verbatim}
 
-Der Parameter \texttt{+RTS -s} schaltet dabei das Profiling ein und gibt eine
+Der Parameter \texttt{+RTS -s} schaltet das Profiling ein und gibt eine
 detailierte Zusammenfassung "uber Speicherverbrauch, Laufzeit, etc. aus.  Die
 Profilinginformationen werden auf \texttt{stderr} ausgegeben, w"ahrend die
 normale Ausgabe des Programms "uber \texttt{stdout} l"auft, so lassen sich
-Ausgabe und Profiling einfach trennen.\footnote{Man kann auch \texttt{-s<file>}
-verwenden, das leitet die Ausgabe der Profilinginformationen entsprechend um.}
+Ausgabe und Profiling einfach trennen.\footnote{Man kann stattdessen auch
+\texttt{-s<file>} verwenden, diese Option leitet die Ausgabe der
+Profilinginformationen entsprechend um.}
 
 \section{Material/logistisch1.txt}
-
-\subsection*{Befehlszeile}
-
-\begin{verbatim}
-./Aufgabe3 -12 Material/logistisch1.txt +RTS -s
-\end{verbatim}
 
 \subsection*{Ausgabe}
 
@@ -238,12 +236,6 @@ verwenden, das leitet die Ausgabe der Profilinginformationen entsprechend um.}
 
 \section{Material/logistisch2.txt}
 
-\subsection*{Befehlszeile}
-
-\begin{verbatim}
-./Aufgabe3 -12 Material/logistisch2.txt +RTS -s
-\end{verbatim}
-
 \subsection*{Ausgabe}
 
 \begin{verbatim}
@@ -296,12 +288,6 @@ verwenden, das leitet die Ausgabe der Profilinginformationen entsprechend um.}
 
 \section{Material/logistisch3.txt}
 
-\subsection*{Befehlszeile}
-
-\begin{verbatim}
-./Aufgabe3 -12 Material/logistisch3.txt +RTS -s
-\end{verbatim}
-
 \subsection*{Ausgabe}
 
 \begin{verbatim}
@@ -353,13 +339,7 @@ verwenden, das leitet die Ausgabe der Profilinginformationen entsprechend um.}
 \end{verbatim}
 
 
-\section{Material/logistisch3.txt}
-
-\subsection*{Befehlszeile}
-
-\begin{verbatim}
-./Aufgabe3 -12 Material/logistisch4.txt +RTS -s
-\end{verbatim}
+\section{Material/logistisch4.txt}
 
 \subsection*{Ausgabe}
 
