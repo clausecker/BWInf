@@ -58,9 +58,11 @@ gen von Strecken enthält. In diesem Baum wird dann mithilfe der Tiefensuche
 eine Optimierung gesucht:
 
   * Berechne die Anzahl der benötigten Fahrzeuge. Ist sie ...
-    * Größer: Inkrementiere s, wenn s > Schwellwert, terminiere
-    * Gleich: Inkrementiere s, wenn s > Schwellwert, terminiere
-    * kleiner: wende Algorithmus rekursiv auf alle weiteren Veränderungen an.
+    * Größer: terminiere
+    * Gleich: Inkrementiere cs; wenn c > s oder Iterationstiefe > i, terminiere,
+              sonst verfahre wie unten.
+    * kleiner: wende Algorithmus rekursiv auf alle weiteren Veränderungen an,
+               Setze cs := 0.
 
 Der Wert s wird benötigt, da es unter Umständen möglich ist, dass erst die Hin-
 zufügung mehrerer Fahrten zu einer Verbesserung führt.
@@ -70,18 +72,14 @@ fahren gewährleistet.
 -}
 
 optimiereFahrten ::
-  Int -> -- Maximale Anzahl an Versuchen, eine nicht verbessernde Änderung zu
-         -- Benutzen.
-  Int -> -- Maximale Iterationstiefe, bis zu der nicht verbessernde ausprobiert
-  Auftragsbuch -> --werden
+  Int -> -- Parameter s
+  Int -> -- Parameter i
+  Auftragsbuch ->
   Auftragsbuch
 optimiereFahrten s i ab = fst $ fst $ optimiereFahrten'
   s s i Set.empty $ bfgx ab
 
-----------
 -- Hilfsfunktionen für Teil 2
-----------
-
 optimiereFahrten' ::
   Int -> -- Schwellwert
   Int -> -- aktueller Schwellwert
@@ -96,7 +94,8 @@ optimiereFahrten' ::
 optimiereFahrten' s cs i ausnahmen start@(ab,guete) = bestesErgebnis where
   -- Es kann angenommen werden, dass die Verbeserungen bereits analysiert wurden
   analysierteAenderungen =
-    filter ((`Set.notMember` ausnahmen) . fst) $ map bfgx $ moeglicheAenderungen ab
+    filter ((`Set.notMember` ausnahmen) . fst)
+    . map bfgx $ moeglicheAenderungen ab
   bessereAenderungen = filter ((< guete) . snd) analysierteAenderungen
   sonstigeAenderungen = if cs == 0 || i <=  0 then []
     else filter ((== guete) . snd) analysierteAenderungen
@@ -107,12 +106,12 @@ optimiereFahrten' s cs i ausnahmen start@(ab,guete) = bestesErgebnis where
   evaluierenUndVergleichen s' (vorschlag,set) neuer = (besserer,set') where
     (evaluiert,set') = optimiereFahrten' s s' (i - 1) set neuer
     besserer = if snd vorschlag < snd evaluiert then vorschlag else evaluiert
-  (ergebnisBeste,ausnahmen'') = foldl -- Bester der sowieso besseren
-    (evaluierenUndVergleichen s) -- s wird zurückgesetzt
-    (start,ausnahmen')
+  (ergebnisBeste,ausnahmen'') = foldl -- Bester Wert der Permutationen, die
+    (evaluierenUndVergleichen s) -- die Fahrzeugzahl verringern.
+    (start,ausnahmen') -- ^ s wird zurückgesetzt.
     bessereAenderungen
-  (ergebnisSonstige,ausnahmen''') = foldl -- Bester der sonst besseren
-    (evaluierenUndVergleichen (cs-1))
+  (ergebnisSonstige,ausnahmen''') = foldl -- Bester Wert jener Permutationen,
+    (evaluierenUndVergleichen (cs-1)) -- die den Fahrzeugwert nicht verändern.
     (start,ausnahmen'')
     sonstigeAenderungen
   bestesErgebnis = (,ausnahmen''') $ if snd ergebnisBeste < snd ergebnisSonstige
@@ -121,21 +120,16 @@ optimiereFahrten' s cs i ausnahmen start@(ab,guete) = bestesErgebnis where
 
 moeglicheAenderungen :: Auftragsbuch -> [Auftragsbuch]
 moeglicheAenderungen ab = nachWochentagen where
-  -- Wir brauchen uns um Montag und Samstag nicht kümmern, es ist egal
-  -- wo die Autos am Anfang und Ende stehen.
-  -- Boilerplate
-  (Auftragsbuch _ die mit don fre _) = ab
-  nachWochentagen = concat [ -- Ich liebe record syntax!
-    (\x -> ab {dienstags   = x}) <$> mts die,
-    (\x -> ab {mittwochs   = x}) <$> mts mit,
-    (\x -> ab {donnerstags = x}) <$> mts don,
-    (\x -> ab {freitags    = x}) <$> mts fre]
-  -- Wendet Änderungen Tageweise an.
-  -- mts = modifiziereTourSet
-  -- Boilerplate :-(
-  mts (TourSet ab ac ba bc ca cb) =
-    [ TourSet (ab + 1) ac ba bc ca cb
-    , TourSet ab (ac + 1) ba bc ca cb
+  (Auftragsbuch _ die mit don fre _) = ab     -- Wir brauchen uns um Montag und
+  nachWochentagen = concat [                  -- Samstag nicht kümmern, es ist
+    (\x -> ab {dienstags   = x}) <$> mts die, -- egal wo die Autos am Anfang und
+    (\x -> ab {mittwochs   = x}) <$> mts mit, -- Ende stehen.
+    (\x -> ab {donnerstags = x}) <$> mts don, -- Boilerplate
+    (\x -> ab {freitags    = x}) <$> mts fre] -- PS: Ich liebe record syntax!
+
+  mts (TourSet ab ac ba bc ca cb) =   -- Wendet Änderungen Tageweise an.
+    [ TourSet (ab + 1) ac ba bc ca cb -- mts = modifiziereTourSet
+    , TourSet ab (ac + 1) ba bc ca cb -- Boilerplate :-(
     , TourSet ab ac (ba + 1) bc ca cb
     , TourSet ab ac ba (bc + 1) ca cb
     , TourSet ab ac ba bc (ca + 1) cb

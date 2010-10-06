@@ -1,10 +1,10 @@
 Version of workspace file format:
                1
 Time of storage:
-               "Mon Oct  4 21:15:28 CST 2010"
+               "Tue Oct  5 21:39:55 CST 2010"
 Name of the workspace:
                "BWInf"
 File paths of contained packages:
                ["Aufgabe4/Aufgabe4.cabal","Aufgabe3/Aufgabe3.cabal"]
 Maybe file path of an active package:
-               Just "Aufgabe3/Aufgabe3.cabal"
+               Just "Aufgabe4/Aufgabe4.cabal"
