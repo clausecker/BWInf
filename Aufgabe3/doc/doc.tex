@@ -34,7 +34,7 @@ dem Bestand ablesen.
 \section {Algorithmus}
 Der Fahrzeugbestand wird als Paar nat"urlicher Zahlen dargestellt, die
 erste stellt die Anzahl der sich an dem Lager befindlichen Fahrzeuge dar, die
-zweite ist der Wert, wieviele Fahrzeuge insgesamt zu dieser Station geordert
+zweite ist der Wert, wie viele Fahrzeuge insgesamt zu dieser Station geordert
 werden m"ussen.  Aus dem Paar der anfahrenden- und abfahrenden Fahrzeuge sowie
 dem vorherigen Bestand wird nach folgendem Schema der neue Bestand bestimmt:
 
@@ -51,10 +51,10 @@ $$
 Am Anfang der Woche wird mit einem Startwert von $(0,0)$ begonnen, die Liste der
 Fahrten nach Wochentagen wird dann von Montag bis Samstag mit der Funktion
 \texttt{foldl} gefaltet.  Der Einfachheit halber wurde der Algorithmus zur
-Bestimmung der An- und Abfahrten hart verdrahtet, mit geringerem Mehraufwand
-lie"se sich jeder auch wesentlich generischer schreiben.
+Bestimmung der An- und Abfahrten hart verdrahtet, mit geringem Mehraufwand
+lie"se sich jener auch wesentlich generischer schreiben.
 
-Die Ausgabe der Funktion sind die drei o.\,g. Tupel. F"ur das Gesamtergebnir
+Die Ausgabe der Funktion sind die drei o.\,g. Tupel. F"ur das Gesamtergebnis
 werden aber nur die ersten Werte der Tupel gebraucht, der Rest wird am Ende
 verworfen. Die Anzahl der nun wirklich ben"otigten Fahrzeuge ist die Summe jener
 drei Werte.
@@ -86,14 +86,15 @@ fallen.
 Das Verfahren besteht darin, zu untersuchen, wie sich die Hinzuf"ugung einzelner
 Fahrten auf die Anzahl der n"otigen Fahrzeuge auswirkt.  Dazu wird von einer
 Generatorfunktion eine Liste aller m"oglichen Auftragsb"ucher nach Hinzuf"ugung
-\emph{einer} Fahrt generiert, die dann bewertet wird.  Alle Permutationen, die
-mehr Fahrten ben"oetigen, werden nicht weiter verfolgt.  Bei Auftragsb"uchern,
-die die gleiche Anzahl an Fahrzeugen ben"otigen, also keine Optimierung
-darstellen, wird anhand der Parameter entschieden, ob die Permutation weiter
-verfolgt wird.  Wenn die Anzahl der Fahrzeuge hingegen sinkt, so wird jenes Buch
-in jedem Fall weiterverfolgt.
+\emph{einer} Fahrt generiert, die dann bewertet wird.
 
-Dies wird Rekursiv durchgef"uhrt, eine Rekursionsebene ruft die Funktion zur
+Alle Permutationen, die mehr Fahrten ben"otigen, werden nicht weiter verfolgt.
+Bei Auftragsb"uchern, die die gleiche Anzahl an Fahrzeugen ben"otigen, also
+keine Optimierung darstellen, wird anhand der Parameter entschieden, ob die
+Permutation weiter verfolgt wird.  Wenn die Anzahl der Fahrzeuge hingegen sinkt,
+so wird jenes Buch in jedem Fall weiterverfolgt.
+
+Dies wird rekursiv durchgef"uhrt, eine Rekursionsebene ruft die Funktion zur
 Optimierung der n"achsten Permutation nach o.\,g. Kriterien auf, und liefert das
 beste Auftragsbuch zur"uck.
 
@@ -106,13 +107,15 @@ ausgenommen jener Auftragsb"ucher, die die Anzahl der Fahrzeuge aufbessern.
 \subsection{Einfluss der Parameter auf das Programm}
 Ich habe durch diverse Tests herausgefunden, dass f"ur einige Auftragsb"ucher
 die Parameter $s := 0,\ i := 0$ ausreichend sind, allerdings werden in diesem
-Fall nicht immer gute Ergebnisse erzielt.  Falls man jedoch $s := 1,\ i := 0$
-setzt, so braucht das Programm meist extrem lange zur Berechnung (Das ist auch
-der Grund, warum ich den Parameter $i$ eingef"uhrt habe).
+Fall nicht immer gute Ergebnisse erzielt.  Falls man jedoch $s := 1,\ i :=
+\infty$ setzt,\footnote{$i$ wird auf einen unrealistisch gro"sen Wert (z.\,B.
+10000) gesetzt, um dies zu simulieren.} so braucht das Programm meist extrem
+lange zur Berechnung (Das ist auch der Grund, warum ich den Parameter $i$
+eingef"uhrt habe).
 
 Eine gute Kombination scheint mir $s := 1,\ i := 3$, die Laufzeit hält sich so
 meist in Grenzen und es werden hinreichend gute Optimierungen gefunden.  Unter
-Verwendung dieser Parameter dauert die Optimierung der Test-Dateien zwischen 0-
+Verwendung dieser Parameter dauert die Optimierung der Test-Dateien zwischen 0\ 
 und 10\ Sekunden.
 
 \chapter{Verwendung des Programms}
@@ -124,9 +127,9 @@ Das Programm kennt folgende Parameter:
 Aufgabe3 [-1] [-2 [-s x] [-i x]] [-o Ausgabedatei] [Eingabedatei]
 \end{verbatim}
 
-Sollte der Parameter \texttt{-o} nicht gegeben sein, so auf die Standardausgabe
-geschrieben, sollte keine Eingabedatei gegeben sein, so wird aus der
-Standardingabe gelesen.
+Sollte der Parameter \texttt{-o} nicht gegeben sein, so wird auf die
+Standardausgabe geschrieben, sollte keine Eingabedatei gegeben sein, so wird aus
+der Standardeingabe gelesen.
 
 Die Parameter \texttt{-s} und \texttt{-i} steuern die zugeh"origen Parameter des
 Optimierungsalgorithmus, Standardwerte sind $s := 1$ und $i := 3$. Die Parameter
