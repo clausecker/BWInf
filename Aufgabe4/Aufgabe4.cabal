@@ -12,9 +12,7 @@ homepage:
 package-url:
 bug-reports:
 synopsis: Aufgabe 4 des 29. BWInf
-description:  
-             .
-             .
+description: .
              .
              .
 category:
@@ -24,6 +22,30 @@ data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
+exposed-modules: Aufgabe4.Statistik Aufgabe4.Datentypen
+exposed: True
+buildable: True
+build-tools:
+cpp-options:
+cc-options:
+ld-options:
+pkgconfig-depends:
+frameworks:
+c-sources:
+extensions:
+extra-libraries:
+extra-lib-dirs:
+includes:
+install-includes:
+include-dirs:
+hs-source-dirs: src
+other-modules:
+ghc-prof-options:
+ghc-shared-options:
+ghc-options:
+hugs-options:
+nhc98-options:
+jhc-options:
  
 executable: Aufgabe4
 main-is: Main.hs
