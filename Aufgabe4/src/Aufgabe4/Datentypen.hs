@@ -1,9 +1,13 @@
 {-# LANGUAGE BangPatterns #-}
-module Aufgabe4.Datentypen {- (
+module Aufgabe4.Datentypen (
     Kartenspiel (..),
     Karte (..),
-    Auswahl
-  ) -} where
+    Auswahl,
+    auswahlAnwendbar,
+    wendeAuswahlAn,
+    addKarte,
+    removeKarte
+  ) where
 
 import Data.Bits ()
 
@@ -62,10 +66,10 @@ addKarte, removeKarte :: Karte -> Kartenspiel -> Kartenspiel
 addKarte    = (flip changeKarte) True
 removeKarte = (flip changeKarte) False
 
-auswahlAnwendbar :: Auswahl -> Kartenspiel -> Bool
-auswahlAnwendbar (Left karte)  spiel = haveKarte karte spiel
-auswahlAnwendbar (Right (a,b)) spiel = haveKarte a spiel && haveKarte b spiel
+auswahlAnwendbar :: Kartenspiel -> Auswahl -> Bool
+auswahlAnwendbar spiel (Left karte) = haveKarte karte spiel
+auswahlAnwendbar spiel (Right (a,b)) = haveKarte a spiel && haveKarte b spiel
 
-wendeAuswahlAn :: Auswahl -> Kartenspiel -> Kartenspiel
-wendeAuswahlAn (Left  karte) = removeKarte karte
-wendeAuswahlAn (Right (a,b)) = removeKarte b . removeKarte a
+wendeAuswahlAn :: Kartenspiel -> Auswahl -> Kartenspiel
+wendeAuswahlAn spiel (Left  karte) = removeKarte karte spiel
+wendeAuswahlAn spiel (Right (a,b)) = removeKarte b . removeKarte a $ spiel

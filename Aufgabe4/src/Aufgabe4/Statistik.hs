@@ -1,8 +1,7 @@
 -- Dieses Modul enthält den statistischen Kram.
-module Aufgabe4.Statistik {- (
-  wahrscheinlichkeitAugen,
-  kombinationen
-) -} where
+module Aufgabe4.Statistik (
+  bewerteKartenspiel
+) where
 
 import Aufgabe4.Datentypen
 
@@ -10,17 +9,17 @@ import Aufgabe4.Datentypen
 {-# SPECIALIZE wahrscheinlichkeitAugen :: [Rational] #-}
 wahrscheinlichkeitAugen :: Fractional t => [t]
 wahrscheinlichkeitAugen =
-  [ 1 / 36 --  2
-  , 1 / 18 --  3
-  , 1 / 12 --  4
-  , 1 /  9 --  5
-  , 5 / 36 --  6
-  , 1 /  6 --  7
-  , 5 / 36 --  8
-  , 1 /  9 --  9
-  , 1 / 12 -- 10
-  , 1 / 18 -- 11
-  , 1 / 36 -- 12
+  [ 1/36 --  2
+  , 1/18 --  3
+  , 1/12 --  4
+  , 1/ 9 --  5
+  , 5/36 --  6
+  , 1/ 6 --  7
+  , 5/36 --  8
+  , 1/ 9 --  9
+  , 1/12 -- 10
+  , 1/18 -- 11
+  , 1/36 -- 12
   ]
 
 -- Liste alle Möglichkeiten, eine Augenzahl durch ein bis zwei Karten abzudecken
@@ -75,9 +74,10 @@ kombinationen =
   ]]
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
-punkte :: Kartenspiel -> Int
-punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) = sum list where
-  list = map snd . filter (not . fst) $ zip [k1,k2,k3,k4,k5,k6,k7,k8,k9] [1..9]
+{-# SPECIALIZE punkte :: Kartenspiel -> Rational #-}
+punkte :: (Num a, Enum a) => Kartenspiel -> a
+punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) =
+  sum . map snd . filter (not . fst) $ zip [k1,k2,k3,k4,k5,k6,k7,k8,k9] [1..9]
 
 {-
 Die Nachfolgende Funktion ist die Kernfunktion des Programms.  Sie berechnet den
@@ -90,5 +90,13 @@ aufgerufen.  Die so erhaltenen Ergebnisse werden anschließend mit der Wahr-
 scheinlichkeit, dass sie eintreten multipliziert, summiert und zurückgegeben.
 -}
 
-bewerteKartenspiel :: (Fractional a) => Kartenspiel -> a
-bewerteKartenspiel = undefined
+{-# SPECIALIZE bewerteKartenspiel :: Kartenspiel -> Rational #-}
+bewerteKartenspiel :: (Fractional a, Ord a, Enum a) => Kartenspiel -> a
+bewerteKartenspiel spiel = sum gewichteteWertungen where
+  anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
+  angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
+  bewertungen         = map (map bewerteKartenspiel) angewandteAuswahlen
+  besteBewertungen    = map getBest bewertungen where
+    getBest [] = punkte spiel -- Wir wissen, wenn es keine Möglichkeit gibt,
+    getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
+  gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
