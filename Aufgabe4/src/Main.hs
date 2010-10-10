@@ -13,10 +13,10 @@
 -----------------------------------------------------------------------------
 
 module Main (
-
-
+  main
 ) where
 
+import Aufgabe4.Statistik
 
-
-main = undefined
+main :: IO ()
+main = print (bewerteSpiel :: Double)

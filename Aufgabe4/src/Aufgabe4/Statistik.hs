@@ -1,12 +1,14 @@
 -- Dieses Modul enthält den statistischen Kram.
 module Aufgabe4.Statistik (
-  bewerteKartenspiel
+  bewerteKartenspiel,
+  bewerteSpiel
 ) where
 
 import Aufgabe4.Datentypen
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
 {-# SPECIALIZE wahrscheinlichkeitAugen :: [Rational] #-}
+{-# SPECIALIZE wahrscheinlichkeitAugen :: [Double] #-}
 wahrscheinlichkeitAugen :: Fractional t => [t]
 wahrscheinlichkeitAugen =
   [ 1/36 --  2
@@ -74,7 +76,7 @@ kombinationen =
   ]]
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
-{-# SPECIALIZE punkte :: Kartenspiel -> Rational #-}
+{-# SPECIALIZE punkte :: Kartenspiel -> Double #-}
 punkte :: (Num a, Enum a) => Kartenspiel -> a
 punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) =
   sum . map snd . filter (not . fst) $ zip [k1,k2,k3,k4,k5,k6,k7,k8,k9] [1..9]
@@ -90,7 +92,7 @@ aufgerufen.  Die so erhaltenen Ergebnisse werden anschließend mit der Wahr-
 scheinlichkeit, dass sie eintreten multipliziert, summiert und zurückgegeben.
 -}
 
-{-# SPECIALIZE bewerteKartenspiel :: Kartenspiel -> Rational #-}
+{-# SPECIALIZE bewerteKartenspiel :: Kartenspiel -> Double #-}
 bewerteKartenspiel :: (Fractional a, Ord a, Enum a) => Kartenspiel -> a
 bewerteKartenspiel spiel = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
@@ -100,3 +102,9 @@ bewerteKartenspiel spiel = sum gewichteteWertungen where
     getBest [] = punkte spiel -- Wir wissen, wenn es keine Möglichkeit gibt,
     getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
   gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
+
+-- Berechnet das zu erwartende Ergebnis nach vielen Spielen. Dies ist auch eine
+-- der Teilaufgaben.
+bewerteSpiel :: (Fractional a, Ord a, Enum a) => a
+bewerteSpiel = bewerteKartenspiel $
+  Kartenspiel True True True True True True True True True

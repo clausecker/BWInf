@@ -22,7 +22,7 @@ data Kartenspiel = Kartenspiel
   , karte7 :: !Bool
   , karte8 :: !Bool
   , karte9 :: !Bool
-  } deriving (Eq,Ord,Show)
+  } deriving (Show)
 
 
 data Karte
@@ -35,7 +35,7 @@ data Karte
   | Karte7
   | Karte8
   | Karte9
-  deriving (Show,Ord,Eq,Enum,Bounded)
+  deriving (Show,Enum)
 
 -- Möglichkeit, eine Karte auszuwählen.
 type Auswahl = Either Karte (Karte,Karte)
