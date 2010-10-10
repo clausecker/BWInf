@@ -2,14 +2,16 @@
 {-# LANGUAGE BangPatterns #-}
 module Aufgabe4.Statistik (
   bewerteKartenspiel,
-  bewerteSpiel
+  bewerteSpiel,
+  besteAuswahl,
+  getKandidaten
 ) where
 
 import Aufgabe4.Datentypen
+import Data.List (maximumBy)
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
-{-# SPECIALIZE wahrscheinlichkeitAugen :: [Double] #-}
-wahrscheinlichkeitAugen :: Fractional t => [t]
+wahrscheinlichkeitAugen :: [Double]
 wahrscheinlichkeitAugen =
   [ 1/36 --  2
   , 1/18 --  3
@@ -76,8 +78,7 @@ kombinationen =
   ]]
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
-{-# SPECIALIZE punkte :: Kartenspiel -> Double #-}
-punkte :: (Num a, Enum a) => Kartenspiel -> a
+punkte :: Kartenspiel -> Double
 punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) =
   sum . map snd . filter (not . fst) $ zip [k1,k2,k3,k4,k5,k6,k7,k8,k9] [1..9]
 
@@ -92,8 +93,7 @@ aufgerufen.  Die so erhaltenen Ergebnisse werden anschließend mit der Wahr-
 scheinlichkeit, dass sie eintreten multipliziert, summiert und zurückgegeben.
 -}
 
-{-# SPECIALIZE bewerteKartenspiel :: Kartenspiel -> Double #-}
-bewerteKartenspiel :: (Fractional a, Ord a, Enum a) => Kartenspiel -> a
+bewerteKartenspiel :: Kartenspiel -> Double
 bewerteKartenspiel !spiel = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
@@ -103,9 +103,24 @@ bewerteKartenspiel !spiel = sum gewichteteWertungen where
     getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
   gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
 
--- Berechnet das zu erwartende Ergebnis nach vielen Spielen.  Dies ist auch eine
--- der Teilaufgaben.  Die Funktion läuft am schnellsten, wenn Double verwendet
--- wird.
-bewerteSpiel :: (Fractional a, Ord a, Enum a) => a
+-- Berechnet das zu erwartende Ergebnis nach vielen Spielen.
+bewerteSpiel :: Double
 bewerteSpiel = bewerteKartenspiel $
   Kartenspiel True True True True True True True True True
+
+-- Berechnet und wertet alle Kandidaten.
+getKandidaten :: Int -> Kartenspiel -> [(Auswahl,Double)]
+getKandidaten zahl ks | zahl < 2 || zahl > 12 = error msg
+                      | otherwise = zip kandidaten wertungen where
+  kandidaten = filter (auswahlAnwendbar ks) $ kombinationen !! (zahl - 2)
+  wertungen = map (bewerteKartenspiel . wendeAuswahlAn ks) kandidaten
+  msg = "Seit wann kann man " ++ show zahl ++ " würfeln?"
+
+-- Berechnet, welche Auswahl man für ein möglichst gutes Ergebnis treffen sollte
+-- Nothing wenn keine Auswahl möglich ist-
+besteAuswahl :: Int {- Gewürfelte Zahl -} -> Kartenspiel -> Maybe Auswahl
+besteAuswahl zahl ks = beste >>= Just . fst where
+  auswahlen = getKandidaten zahl ks
+  beste | null auswahlen = Nothing
+        | otherwise = Just $ maximumBy (\(_,a) (_,b)-> compare a b) auswahlen
+

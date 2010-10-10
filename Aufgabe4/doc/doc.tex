@@ -1,0 +1,67 @@
+\documentclass{scrreprt}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage {ngerman}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+
+\author {Team "`Herder"' -- Robert Clausecker}
+\title {L"osung zur Aufgabe 4}
+\subtitle {des 29. Bundeswettbewerbs Informatik}
+
+%Definitionen für den Formatierer
+\include{definitions}
+
+\begin{document}
+\maketitle
+
+\tableofcontents \newpage
+
+\chapter{Bedienung}
+
+Das Programm l"asst sich in verschiedenen Modi starten.  Man kann sowohl einen
+bestimmten Spielstand analysieren, als auch interaktiv gegen den Computer
+spielen und sich eventuell helfen lassen.  Alle verf"ugbaren Modi werden im
+folgenden erkl"art.
+
+\section{Überblick}
+
+Es folgt eine Auflistung der Betriebsmodi und weiterer Parameter.  Generell
+werden Parameter, die keinen Sinn ergeben ignoriert.  Sollten wiederspr"uchliche
+Parameter gegeben sein, so ist nur der jeweils letzte relevant.\footnote{Weitere
+Parameter sind verf"ugbar, rufen Sie das Programm mit dem Schalter \texttt
+{--help} f"ur weitere Informationen auf.}
+
+\begin{description}
+\item[-\,-\,help] Zeigt eine \emph{kurze Erl"auterung} der verf"ugbaren
+  Parameter an.
+\item[-\,-\,analyze] F"uhrt eine \emph{Analyse} eines Spielstandes aus.  Falls
+  der Spielstand nicht per Parameter "ubergeben wird, so wird der Anfangszustand
+  (also keine Karte umgedreht) verwendet.
+\item[-\,-\,interactive] Startet den \emph{interaktiven Modus}.  Im interaktiven
+  Modus kann man das Lernspiel gegen den Computer spielen.  Das Programm kann
+  wahlweise auch Tipps geben und jederzeit Analysen durchf"uhren.
+\item[-\,-\,auto] L"asst den Computer eine beliebige Anzahl an Spielen \emph
+  {gegen sich selbst} spielen.  Die Ergebnisse werden gesammelt und ausgegeben.
+\item[-\,s \textit{x}] Setzt den zu verwendenden Spielstand auf \textit{x}.
+\item[-\,n \textit{x}] Setzt die Anzahl der Spiele, die der Computer gegen sich
+  selbst spielt auf \textit{x}.
+\item[-\,v] Gebe mehr Informationen aus.
+\end{description}
+
+\chapter{Quelltexte}
+
+\section{Aufgabe4/Datentypen.hs}
+\input{Datentypen.hs}
+
+\section{Aufgabe4/Statistik.hs}
+\input{Statistik.hs}
+
+\section{Aufgabe4/IO.hs}
+\input{IO.hs}
+
+\section{Main.hs}
+\input{Main.hs}
+
+\end{document}
