@@ -1,4 +1,5 @@
 -- Dieses Modul enthält den statistischen Kram.
+{-# LANGUAGE BangPatterns #-}
 module Aufgabe4.Statistik (
   bewerteKartenspiel,
   bewerteSpiel
@@ -7,7 +8,6 @@ module Aufgabe4.Statistik (
 import Aufgabe4.Datentypen
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
-{-# SPECIALIZE wahrscheinlichkeitAugen :: [Rational] #-}
 {-# SPECIALIZE wahrscheinlichkeitAugen :: [Double] #-}
 wahrscheinlichkeitAugen :: Fractional t => [t]
 wahrscheinlichkeitAugen =
@@ -94,7 +94,7 @@ scheinlichkeit, dass sie eintreten multipliziert, summiert und zurückgegeben.
 
 {-# SPECIALIZE bewerteKartenspiel :: Kartenspiel -> Double #-}
 bewerteKartenspiel :: (Fractional a, Ord a, Enum a) => Kartenspiel -> a
-bewerteKartenspiel spiel = sum gewichteteWertungen where
+bewerteKartenspiel !spiel = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
   bewertungen         = map (map bewerteKartenspiel) angewandteAuswahlen
@@ -103,8 +103,9 @@ bewerteKartenspiel spiel = sum gewichteteWertungen where
     getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
   gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
 
--- Berechnet das zu erwartende Ergebnis nach vielen Spielen. Dies ist auch eine
--- der Teilaufgaben.
+-- Berechnet das zu erwartende Ergebnis nach vielen Spielen.  Dies ist auch eine
+-- der Teilaufgaben.  Die Funktion läuft am schnellsten, wenn Double verwendet
+-- wird.
 bewerteSpiel :: (Fractional a, Ord a, Enum a) => a
 bewerteSpiel = bewerteKartenspiel $
   Kartenspiel True True True True True True True True True

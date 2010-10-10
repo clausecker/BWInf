@@ -19,4 +19,4 @@ module Main (
 import Aufgabe4.Statistik
 
 main :: IO ()
-main = print (bewerteSpiel :: Double)
+main = print bewerteSpiel
