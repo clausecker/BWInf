@@ -18,7 +18,7 @@ auftragsbuchAusString string = do
     (fail "Aufgabe3.IO: Ungültige Eingabe: Ungültige Anzahl an Tagen")
   tourSets <- tourSetAusString `mapM` withoutComments
   let auftragsbuch = auftragsbuchAusListe tourSets
-  return $ auftragsbuch `seq` auftragsbuch -- Wir brauchen das strikt.
+  return $! auftragsbuch -- Wir brauchen das strikt.
 
 tourSetAusString :: Monad m => String -> m TourSet
 tourSetAusString string = do

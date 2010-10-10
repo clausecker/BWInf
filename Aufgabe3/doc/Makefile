@@ -17,18 +17,18 @@ PDFLATEX_OPTS = -halt-on-error
 doc: doc.pdf
 
 #Der log wird auch nach doc.log ausgegeben...
-doc.pdf: toc
+doc.pdf: doc.toc definitions.tex $(HIGHLIGHTED_FILES)
 	$(PDFLATEX) $(PDFLATEX_OPTS) doc.tex > /dev/null
 
 #Die Datei muss zweimal gebaut werden, um das Inhaltsverzeichnis darzustellen
-toc: doc.tex definitions.tex $(HIGHLIGHTED_FILES)
+doc.toc: doc.tex definitions.tex $(HIGHLIGHTED_FILES)
 	$(PDFLATEX) -draftmode $(PDFLATEX_OPTS) doc.tex > /dev/null
 
 #Enthält den Vorspann der Pygments Befehle.
 definitions.tex:
 	$(PYGMENTIZE) -S $(STYLE) -f tex > $@
 
-.PHONY: clean toc
+.PHONY: clean
 
 clean:
 	$(RM) *.pdf *.hs.tex *.aux *.log definitions.tex *.toc
