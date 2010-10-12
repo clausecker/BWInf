@@ -4,7 +4,8 @@ module Aufgabe4.Statistik (
   bewerteKartenspiel,
   bewerteSpiel,
   besteAuswahl,
-  getKandidaten
+  getKandidaten,
+  punkte
 ) where
 
 import Aufgabe4.Datentypen
@@ -78,7 +79,8 @@ kombinationen =
   ]]
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
-punkte :: Kartenspiel -> Double
+{-# SPECIALISE punkte :: Kartenspiel -> Double #-}
+punkte :: (Num a, Enum a) => Kartenspiel -> a
 punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) =
   sum . map snd . filter (not . fst) $ zip [k1,k2,k3,k4,k5,k6,k7,k8,k9] [1..9]
 
@@ -123,4 +125,3 @@ besteAuswahl zahl ks = beste >>= Just . fst where
   auswahlen = getKandidaten zahl ks
   beste | null auswahlen = Nothing
         | otherwise = Just $ maximumBy (\(_,a) (_,b)-> compare a b) auswahlen
-

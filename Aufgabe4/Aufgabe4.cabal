@@ -6,14 +6,13 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: base -any, base -any
+build-depends: base -any, mtl -any, random -any
 stability:
 homepage:
 package-url:
 bug-reports:
 synopsis: Aufgabe 4 des 29. BWInf
 description: .
-             .
 category:
 author:
 tested-with:
