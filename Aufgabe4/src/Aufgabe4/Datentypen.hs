@@ -3,6 +3,7 @@ module Aufgabe4.Datentypen (
   Kartenspiel (..),
   Karte (..),
   Auswahl,
+  startaufstellung,
   auswahlAnwendbar,
   wendeAuswahlAn,
   addKarte,
@@ -49,6 +50,8 @@ changeKarte x Karte7 ks = ks { karte7 = x}
 changeKarte x Karte8 ks = ks { karte8 = x}
 changeKarte x Karte9 ks = ks { karte9 = x}
 
+startaufstellung :: Kartenspiel
+startaufstellung = Kartenspiel True True True True True True True True True
 
 addKarte, removeKarte :: Karte -> Kartenspiel -> Kartenspiel
 addKarte    = changeKarte True

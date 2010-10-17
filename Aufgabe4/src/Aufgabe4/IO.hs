@@ -8,6 +8,7 @@ import Control.Monad.Writer
 import Text.Printf
 import Data.List (maximumBy)
 import System.Random
+import Data.Maybe (fromJust)
 
 {- Eingabeformat:
 Das Kartenspiel wird als Ziffernfolge eingelesen und sollte recht selbsterklä-
@@ -19,12 +20,18 @@ Verbosity:
   3: Debug
 -}
 
-parseKartenspiel :: String -> Maybe Kartenspiel
-parseKartenspiel karten | all (`elem` ['1'..'9']) karten = Just resultat
-                        | otherwise                      = Nothing where
-  start    = Kartenspiel False False False False False False False False False
-  resultat = foldl (flip addKarte) start $
+parseKartenspielS :: String -> Maybe Kartenspiel
+parseKartenspielS karten | all (`elem` ['1'..'9']) karten = Just resultat
+                         | otherwise                      = Nothing where
+  resultat = foldl (flip addKarte) startaufstellung $
     map (toEnum . pred . read . (:[])) karten
+
+-- Das selbe nur mit Exceptions
+parseKartenspiel :: String -> Kartenspiel
+parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
+                        | otherwise                      = error errorMsg where
+  resultat = fromJust (parseKartenspielS karten)
+  errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
 -- Funktion lässt den Computer einen Zug machen.
 macheZug :: Int -> Int -> Kartenspiel -> Writer String Kartenspiel
@@ -67,10 +74,22 @@ computerSpiel v gen ks = do
         if (karten' == karten) -- Spiel vorbei?
           then return (karten,g'',True)
           else do
-            when (v >= 2) $ tell $ "Zustand nach Zug: " ++ show karten'
+            when (v >= 2) $ tell $ "\nZustand nach Zug: " ++ show karten'
             return (karten',g'',False)
   (ks',g,_) <- spielschleife $ return (ks,gen,False)
   let wertung = punkte ks'
   when (v == 1) $ tell $ printf "(%d)" wertung
-  when (v > 1) $ tell $ "Endergebnis: " ++ show wertung
+  when (v > 1) $ tell $ "\nEndergebnis: " ++ show wertung
   return (wertung,g)
+
+spieleNmal :: RandomGen g => Int -> -- Anzahl der Spiele; wie oben
+  Int -> g -> Kartenspiel -> Writer String ([Int],g)
+spieleNmal 0 _ gen _  = return ([],gen)
+spieleNmal n v gen ks = do
+  when (v >= 1) $ tell $ printf "\nSpiele %d mal..." n
+  when (v < -2) $ tell $ printf "\nNoch %d Spiele" n
+  let v' | v > 0     = -v -- Hack: Wir wollen obige Nachricht nur einmal
+         | otherwise =  v -- ausgeben.
+  (resultat,gen') <- computerSpiel v gen ks
+  (resultate,gen'') <- spieleNmal (n - 1) v' gen' ks
+  return (resultat : resultate, gen'')

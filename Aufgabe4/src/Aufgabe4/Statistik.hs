@@ -14,69 +14,28 @@ import Data.List (maximumBy)
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
 wahrscheinlichkeitAugen :: [Double]
 wahrscheinlichkeitAugen =
-  [ 1/36 --  2
-  , 1/18 --  3
-  , 1/12 --  4
-  , 1/ 9 --  5
-  , 5/36 --  6
-  , 1/ 6 --  7
-  , 5/36 --  8
-  , 1/ 9 --  9
-  , 1/12 -- 10
-  , 1/18 -- 11
-  , 1/36 -- 12
-  ]
+  [ 1/36, 1/18, 1/12, 1/ 9, 5/36, 1/ 6, 5/36, 1/ 9, 1/12, 1/18, 1/36]
+--   2     3     4     5     6     7     8     9    10    11    12
 
 -- Liste alle Möglichkeiten, eine Augenzahl durch ein bis zwei Karten abzudecken
 kombinationen :: [[Auswahl]]
 kombinationen =
-  [  --  2
-    [ Left   Karte2
-  ], --  3
-    [ Right (Karte1,Karte2)
-    , Left   Karte3
-  ], --  4
-    [ Right (Karte1,Karte3)
-    , Left   Karte4
-  ], --  5
-    [ Right (Karte1,Karte4)
-    , Right (Karte2,Karte3)
-    , Left   Karte5
-  ], --  6
-    [ Right (Karte1,Karte5)
-    , Right (Karte2,Karte4)
-    , Left   Karte6
-  ], --  7
-    [ Right (Karte1,Karte6)
-    , Right (Karte2,Karte5)
-    , Right (Karte3,Karte4)
-    , Left   Karte7
-  ], --  8
-    [ Right (Karte1,Karte7)
-    , Right (Karte2,Karte6)
-    , Right (Karte3,Karte5)
-    , Left   Karte8
-  ], --  9
-    [ Right (Karte1,Karte8)
-    , Right (Karte2,Karte7)
-    , Right (Karte3,Karte6)
-    , Right (Karte4,Karte5)
-    , Left   Karte9
-  ], -- 10
-    [ Right (Karte1,Karte9)
-    , Right (Karte2,Karte8)
-    , Right (Karte3,Karte7)
-    , Right (Karte4,Karte6)
-  ], -- 11
-    [ Right (Karte2,Karte9)
-    , Right (Karte3,Karte8)
-    , Right (Karte4,Karte7)
-    , Right (Karte5,Karte6)
-  ], -- 12
-    [ Right (Karte3,Karte9)
-    , Right (Karte4,Karte8)
-    , Right (Karte5,Karte7)
-  ]]
+  [ [Left   Karte2] -- 2
+  , [Right (Karte1,Karte2), Left   Karte3] -- 3
+  , [Right (Karte1,Karte3), Left   Karte4] -- 4
+  , [Right (Karte1,Karte4), Right (Karte2,Karte3), Left   Karte5] -- 5
+  , [Right (Karte1,Karte5), Right (Karte2,Karte4), Left   Karte6] -- 6
+  , [Right (Karte1,Karte6), Right (Karte2,Karte5), Right (Karte3,Karte4)
+    ,Left   Karte7] -- 7
+  , [Right (Karte1,Karte7), Right (Karte2,Karte6), Right (Karte3,Karte5)
+    ,Left   Karte8] -- 8
+  , [Right (Karte1,Karte8), Right (Karte2,Karte7), Right (Karte3,Karte6)
+    ,Right (Karte4,Karte5), Left   Karte9] -- 9
+  , [Right (Karte1,Karte9), Right (Karte2,Karte8), Right (Karte3,Karte7)
+    ,Right (Karte4,Karte6)] -- 10
+  , [Right (Karte2,Karte9), Right (Karte3,Karte8), Right (Karte4,Karte7)
+    ,Right (Karte5,Karte6)] -- 11
+  , [Right (Karte3,Karte9), Right (Karte4,Karte8), Right (Karte5,Karte7)]]-- 12
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
 {-# SPECIALISE punkte :: Kartenspiel -> Double #-}
