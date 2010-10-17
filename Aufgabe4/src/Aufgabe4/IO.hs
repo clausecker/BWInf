@@ -1,6 +1,10 @@
 -- Modul zur Ein- und Ausgabe, Interaktion, etc.
 -- Alle Funktionen geben Informationen nach ihrem verbosity level aus.
-module Aufgabe4.IO where
+module Aufgabe4.IO (
+  parseKartenspiel,
+  schoeneAnalyse,
+  spieleNmal
+)where
 
 import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
@@ -23,7 +27,8 @@ Verbosity:
 parseKartenspielS :: String -> Maybe Kartenspiel
 parseKartenspielS karten | all (`elem` ['1'..'9']) karten = Just resultat
                          | otherwise                      = Nothing where
-  resultat = foldl (flip addKarte) startaufstellung $
+  leer     = Kartenspiel False False False False False False False False False
+  resultat = foldl (flip addKarte) leer $
     map (toEnum . pred . read . (:[])) karten
 
 -- Das selbe nur mit Exceptions
@@ -93,3 +98,18 @@ spieleNmal n v gen ks = do
   (resultat,gen') <- computerSpiel v gen ks
   (resultate,gen'') <- spieleNmal (n - 1) v' gen' ks
   return (resultat : resultate, gen'')
+
+-- Analysiert einen Spielstand und gibt ein schönes Resultat aus.
+schoeneAnalyse :: Kartenspiel -> String
+schoeneAnalyse ks = printf "Erwartungswert: %f\nDetails:\n%s"
+  (bewerteKartenspiel ks) ratings where
+  kandidaten  = map (\n -> (n,getKandidaten n ks)) [2..12]
+  showAuswahl (Left k)      = show $ (fromEnum k + 1)
+  showAuswahl (Right (a,b)) = show (fromEnum a + 1) ++ ", " ++ show (fromEnum b + 1)
+  ratings     = kandidaten >>= kandidatenliste -- Teil 1 der Ausgabe
+  kandidatenliste (n,lst) = (printf "  Würfelergebnis %2d\nErwartungswert: %2f\
+    \\nKandidaten:\n%s" n ew liste) :: String where
+    ew | null lst  = punkte ks
+       | otherwise = maximum $ map snd lst
+    liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
+      (showAuswahl k ++ ",") r) :: String

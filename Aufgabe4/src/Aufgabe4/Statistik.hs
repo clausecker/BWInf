@@ -2,14 +2,11 @@
 {-# LANGUAGE BangPatterns #-}
 module Aufgabe4.Statistik (
   bewerteKartenspiel,
-  bewerteSpiel,
-  besteAuswahl,
   getKandidaten,
   punkte
 ) where
 
 import Aufgabe4.Datentypen
-import Data.List (maximumBy)
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
 wahrscheinlichkeitAugen :: [Double]
@@ -64,11 +61,6 @@ bewerteKartenspiel !spiel = sum gewichteteWertungen where
     getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
   gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
 
--- Berechnet das zu erwartende Ergebnis nach vielen Spielen.
-bewerteSpiel :: Double
-bewerteSpiel = bewerteKartenspiel $
-  Kartenspiel True True True True True True True True True
-
 -- Berechnet und wertet alle Kandidaten.
 getKandidaten :: Int -> Kartenspiel -> [(Auswahl,Double)]
 getKandidaten zahl ks | zahl < 2 || zahl > 12 = error msg
@@ -76,11 +68,3 @@ getKandidaten zahl ks | zahl < 2 || zahl > 12 = error msg
   kandidaten = filter (auswahlAnwendbar ks) $ kombinationen !! (zahl - 2)
   wertungen = map (bewerteKartenspiel . wendeAuswahlAn ks) kandidaten
   msg = "Seit wann kann man " ++ show zahl ++ " würfeln?"
-
--- Berechnet, welche Auswahl man für ein möglichst gutes Ergebnis treffen sollte
--- Nothing wenn keine Auswahl möglich ist-
-besteAuswahl :: Int {- Gewürfelte Zahl -} -> Kartenspiel -> Maybe Auswahl
-besteAuswahl zahl ks = beste >>= Just . fst where
-  auswahlen = getKandidaten zahl ks
-  beste | null auswahlen = Nothing
-        | otherwise = Just $ maximumBy (\(_,a) (_,b)-> compare a b) auswahlen

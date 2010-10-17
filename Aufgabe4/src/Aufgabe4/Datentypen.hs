@@ -7,7 +7,6 @@ module Aufgabe4.Datentypen (
   auswahlAnwendbar,
   wendeAuswahlAn,
   addKarte,
-  removeKarte
 ) where
 
 -- Wir stellen das Kartenspiel als algebraischen Datentyp dar.

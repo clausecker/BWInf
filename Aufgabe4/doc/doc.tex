@@ -18,16 +18,34 @@
 
 \tableofcontents \newpage
 
+\chapter{L"osungsverfahren}
+Zur L"osung der Aufgabe wurde die funkionale Programmiersprache \emph{Haskell}
+verwandt. Aufgrund der speziellen Eigenschaften von Haskell (strikte
+Typisierung, Faulheit, sehr gro"se Standardbibliothek, etc.) halte ich diese 
+Sprache vorallem f"ur solche mathematische Probleme geignet.
+
+\section{Algorithmus}
+Der Grundgedanke der L"osung ist es, das Spiel komplett zu "`l"osen"', also f"ur
+jeden m"oglichen Zustand den Erwartungswert zu berechnen.  Diese Erwartungswerte
+werden rekursiv berechnet.
+
+Dazu wird f"ur alle m"oglichen Augenzahlen erechnet, welche M"oglichkeiten es
+gibt, Karten auszuw"ahlen und welche von diesen den h"ochsten Erwartungswert
+besitzt.  Der Erwartungswert der besten Auswahl wird anschlie"send mit der
+Wahrscheinlichkeit der Augenzahl multipliziert und mit den anderen
+Erwartungswerten nach Augenzahlen aufsummiert.
+
+Im Spielmodus zieht der Computer stets den Zug, der den h"ochsten Erwartungswert
+hat.  Nach vielen Spielen sollte sich das Ergebnis dem berechneten Resultat
+angleichen.
 
 \chapter{Bedienung}
-
 Das Programm l"asst sich in verschiedenen Modi starten.  Man kann sowohl einen
 bestimmten Spielstand analysieren, als auch interaktiv gegen den Computer
 spielen und sich eventuell helfen lassen.  Alle verf"ugbaren Modi werden im
 folgenden erkl"art.
 
 \section{Überblick}
-
 Es folgt eine Auflistung der Betriebsmodi und weiterer Parameter.  Generell
 werden Parameter, die keinen Sinn ergeben ignoriert.  Sollten wiederspr"uchliche
 Parameter gegeben sein, so ist nur der jeweils letzte relevant.\footnote{Weitere
@@ -36,13 +54,11 @@ Parameter sind verf"ugbar, rufen Sie das Programm mit dem Schalter \texttt
 
 \begin{description}
 \item[-\,-\,help] Zeigt eine \emph{kurze Erl"auterung} der verf"ugbaren
-  Parameter an.
+  Parameter an.  Ich gehe in der Dokumentation nicht n"aher auf diesen Befehl
+  ein, da er trivial ist.
 \item[-\,-\,analyze] F"uhrt eine \emph{Analyse} eines Spielstandes aus.  Falls
   der Spielstand nicht per Parameter "ubergeben wird, so wird der Anfangszustand
   (also keine Karte umgedreht) verwendet.
-\item[-\,-\,interactive] Startet den \emph{interaktiven Modus}.  Im interaktiven
-  Modus kann man das Lernspiel gegen den Computer spielen.  Das Programm kann
-  wahlweise auch Tipps geben und jederzeit Analysen durchf"uhren.
 \item[-\,-\,auto] L"asst den Computer eine beliebige Anzahl an Spielen \emph
   {gegen sich selbst} spielen.  Die Ergebnisse werden gesammelt und ausgegeben.
 \item[-\,s \textit{x}] Setzt den zu verwendenden Spielstand auf \textit{x}.  Der
@@ -56,7 +72,32 @@ Parameter sind verf"ugbar, rufen Sie das Programm mit dem Schalter \texttt
 \end{description}
 Die Argumente werden generell erst dann auf Fehler gepr"uft, wenn sie auch
 wirklich verwendet werden.  Dies steht v"ollig im Einklang mit dem Prinzip der
-Faulheit von Haskell.
+Faulheit (\emph{laziness}) von Haskell.
+
+\section{Analysemodus}
+Im Analysemodus wird ein Spielstand analysiert und Erwartungswerte ausgegeben.
+Die Erwartungswerte sind nach W"urfelaugen aufgef"achert.  Zur Kontrolle kann
+man den Computer sehr h"aufig gegen sich selbst spielen lassen und die
+Ergebnisse vergleichen.
+
+\subsection*{Beispiel}
+Das Programm gibt eine Ausgabe in folgendem Format aus. Die erste Zeile gibt den
+Erwartungswert aus -- also das zu erwartende Durchschnittsergebnis nach sehr
+vielen Spielen.  In den n"achsten Zeilen wird dann nach Augenzahl aufgef"achert.
+
+Aus Platzgr"unden wurde die Ausgabe gek"urzt, Die vollst"andige Ausgabe ist im
+Verzeichnis \emph{Beispiele} des Projektordners zu finden.
+
+\begin{verbatim}
+$ ./Aufgabe4 -as 123456
+Erwartungswert: 37.98033955380277
+Details:
+  Würfelergebnis  2
+Erwartungswert: 37.50278277892089
+Kandidaten:
+    Auswahl 2,    Erwartung 37.50278277892089
+... usw ...
+\end{verbatim}
 
 \section{Automatischer Modus}
 Dieser Modus wird durch die Angabe des Parameters \texttt{-\/-auto} aktiviert.
@@ -68,10 +109,10 @@ des Programms bei jedem Lauf mit hoher Wahrscheinlichkeit unterschiedlich.
 Das durchschnittliche Ergebnis nach vielen (c.\,a. 500) Spielen sollte der
 Ausgabe der Analysefunktion "ahneln und kann als Kontrolle verwendet werden.
 
-\subsection{Beispiel}
+\subsection*{Beispiel}
 Im folgenden Beispiel wurden 250 Spiele gegen den Computer gespielt.  Um Papier
 zu sparen, ist die Ausgabe gek"urzt, die vollst"andige Ausgabe ist im Ordner
-"'Beispiele"' des Quelltextes zu finden.
+\emph{Beispiele} des Projektverzeichnises zu finden.
 
 \begin{verbatim}
 $ ./Aufgabe4 -cn 250 -s 12345

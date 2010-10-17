@@ -1,4 +1,5 @@
 -- Hauptprogram
+{-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 module Main (
   main
 ) where
@@ -15,7 +16,6 @@ import Text.Printf
 
 data Modus
   = Hilfe
-  | SpieleInteraktiv
   | SpieleAutomatisch
   | Analysiere
   deriving (Show)
@@ -28,15 +28,13 @@ data Optionen = Optionen
   } deriving (Show)
 
 stdOptionen :: Optionen
-stdOptionen = Optionen SpieleInteraktiv startaufstellung 1 0
+stdOptionen = Optionen Analysiere startaufstellung 1 0
 
 optionsbeschreibungen :: [OptDescr (Optionen -> Optionen)]
 optionsbeschreibungen =
   [ Option "?h" ["help"]    (NoArg $ \o -> o {modus = Hilfe}) "Hilfe anzeigen"
   , Option "a"  ["analyze"] (NoArg $ \o -> o {modus = Analysiere})
     "Spielstand analysieren"
-  , Option "i"  ["interactive"] (NoArg $ \o -> o {modus = SpieleInteraktiv})
-    "Interaktiv spielen"
   , Option "c"  ["auto"] (NoArg $ \o -> o {modus = SpieleAutomatisch})
     "den Computer spielen lassen"
   , Option "s"  ["spielstand"] (ReqArg (\s o -> o {spielstand =
@@ -61,9 +59,8 @@ makeOptionen :: [String] -> Optionen
 makeOptionen cmdArgs = if null errors then appliedOptions
   else error $ unlines $ "Folgende Fehler traten bei der Verarbeitung der\
     \Argumente auf:" : errors where
-  (rawArgs,optional,errors) = getOpt orderMode optionsbeschreibungen cmdArgs
+  (rawArgs,_,errors) = getOpt Permute optionsbeschreibungen cmdArgs
   -- Wir interpretieren unerkannte Sachen als Spielstand.
-  orderMode = ReturnInOrder (\s o -> o {spielstand = parseKartenspiel s})
   appliedOptions = foldl (flip ($)) stdOptionen rawArgs
 
 main :: IO ()
@@ -78,6 +75,7 @@ main = do
   when (v >= 2) (putStrLn $ "Führe Funktionsmodus aus: " ++ show funktion)
   case funktion of
     Hilfe -> putStrLn hilfe
+    Analysiere -> putStrLn $ schoeneAnalyse zustand
     SpieleAutomatisch -> do
       when (n < 0) (error $ printf "Anzahl Spiele (%d) negativ." n)
       gen <- getStdGen
@@ -93,5 +91,3 @@ main = do
              \Durchschnittliches Ergebnis: %f\n\
              \Verteilung der Ergebnisse:\n" n durchschnitt
       mapM_ (\(a,r,x) -> printf "\t%2d: %5d (%5.2f%%)\n" x a r) zusammen
-    Analysiere -> undefined
-    _ -> error "Noch nicht implementiert!"

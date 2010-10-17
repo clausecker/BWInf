@@ -1,0 +1,56 @@
+$ ./Aufgabe4 -as 123456
+Erwartungswert: 37.98033955380277
+Details:
+  Würfelergebnis  2
+Erwartungswert: 37.50278277892089
+Kandidaten:
+    Auswahl 2,    Erwartung 37.50278277892089
+  Würfelergebnis  3
+Erwartungswert: 37.9673353909465
+Kandidaten:
+    Auswahl 1, 2, Erwartung 36.69735939643348
+    Auswahl 3,    Erwartung 37.9673353909465
+  Würfelergebnis  4
+Erwartungswert: 37.69947297477518
+Kandidaten:
+    Auswahl 1, 3, Erwartung 37.15067729766804
+    Auswahl 4,    Erwartung 37.69947297477518
+  Würfelergebnis  5
+Erwartungswert: 38.3257851794696
+Kandidaten:
+    Auswahl 1, 4, Erwartung 36.71499199817101
+    Auswahl 2, 3, Erwartung 36.23216735253772
+    Auswahl 5,    Erwartung 38.3257851794696
+  Würfelergebnis  6
+Erwartungswert: 38.21967163923182
+Kandidaten:
+    Auswahl 1, 5, Erwartung 38.21967163923182
+    Auswahl 2, 4, Erwartung 37.800883058984915
+    Auswahl 6,    Erwartung 37.85742217268709
+  Würfelergebnis  7
+Erwartungswert: 38.07690329218107
+Kandidaten:
+    Auswahl 1, 6, Erwartung 38.07690329218107
+    Auswahl 2, 5, Erwartung 37.462405692729774
+    Auswahl 3, 4, Erwartung 37.04728223593965
+  Würfelergebnis  8
+Erwartungswert: 38.50480109739368
+Kandidaten:
+    Auswahl 2, 6, Erwartung 38.50480109739368
+    Auswahl 3, 5, Erwartung 38.43141289437585
+  Würfelergebnis  9
+Erwartungswert: 39.29535322359396
+Kandidaten:
+    Auswahl 3, 6, Erwartung 38.13284465020577
+    Auswahl 4, 5, Erwartung 39.29535322359396
+  Würfelergebnis 10
+Erwartungswert: 38.99871399176954
+Kandidaten:
+    Auswahl 4, 6, Erwartung 38.99871399176954
+  Würfelergebnis 11
+Erwartungswert: 38.59593621399176
+Kandidaten:
+    Auswahl 5, 6, Erwartung 38.59593621399176
+  Würfelergebnis 12
+Erwartungswert: 24.0
+Kandidaten:
