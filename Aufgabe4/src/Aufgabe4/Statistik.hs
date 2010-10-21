@@ -7,6 +7,7 @@ module Aufgabe4.Statistik (
 ) where
 
 import Aufgabe4.Datentypen
+import Data.Array
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
 wahrscheinlichkeitAugen :: [Double]
@@ -49,10 +50,21 @@ gnete Karten auszuwählen.
 ben, ansonsten wird die Funktion rekursiv für alle entstehenden Kartenspiele
 aufgerufen.  Die so erhaltenen Ergebnisse werden anschließend mit der Wahr-
 scheinlichkeit, dass sie eintreten multipliziert, summiert und zurückgegeben.
+  Dazu wird ein Cache verwendet, der Cache ist ein faules Array und enthält alle
+möglichen Spiele. Anstatt eines direkten rekursiven Aufrufs wird einfach der
+entsprechende Wert aus dem Cache angefragt, aufgrund der Laziness wird dieser
+erst dann berechnet. (Und berechnet wahrscheinlich gleich noch ein paar mehr...)
 -}
 
-bewerteKartenspiel :: Kartenspiel -> Double
-bewerteKartenspiel !spiel = sum gewichteteWertungen where
+bewertungsCache :: Array Kartenspiel Double
+bewertungsCache = listArray arrRange werte where
+  werte = map baueCache $ range arrRange
+  arrRange = (spielende,startaufstellung)
+
+bewerteKartenspiel = (bewertungsCache !)
+
+bewerteKartenspiel, baueCache :: Kartenspiel -> Double
+baueCache !spiel = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
   bewertungen         = map (map bewerteKartenspiel) angewandteAuswahlen

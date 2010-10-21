@@ -4,17 +4,25 @@ module Aufgabe4.Datentypen (
   Karte (..),
   Auswahl,
   startaufstellung,
+  spielende,
   auswahlAnwendbar,
   wendeAuswahlAn,
   addKarte,
 ) where
+
+import Data.Ix
 
 -- Wir stellen das Kartenspiel als algebraischen Datentyp dar.
 data Kartenspiel = Kartenspiel
   { karte1 :: !Bool , karte2 :: !Bool , karte3 :: !Bool
   , karte4 :: !Bool , karte5 :: !Bool , karte6 :: !Bool
   , karte7 :: !Bool , karte8 :: !Bool , karte9 :: !Bool
-  } deriving (Show,Eq)
+  } deriving (Show,Eq,Ord,Ix)
+
+-- Häufig gebrauchte Werte
+startaufstellung, spielende :: Kartenspiel
+startaufstellung = Kartenspiel True True True True True True True True True
+spielende = Kartenspiel False False False False False False False False False
 
 data Karte
   = Karte1 | Karte2 | Karte3
@@ -48,9 +56,6 @@ changeKarte x Karte6 ks = ks { karte6 = x}
 changeKarte x Karte7 ks = ks { karte7 = x}
 changeKarte x Karte8 ks = ks { karte8 = x}
 changeKarte x Karte9 ks = ks { karte9 = x}
-
-startaufstellung :: Kartenspiel
-startaufstellung = Kartenspiel True True True True True True True True True
 
 addKarte, removeKarte :: Karte -> Kartenspiel -> Kartenspiel
 addKarte    = changeKarte True

@@ -27,9 +27,8 @@ Verbosity:
 parseKartenspielS :: String -> Maybe Kartenspiel
 parseKartenspielS karten | all (`elem` ['1'..'9']) karten = Just resultat
                          | otherwise                      = Nothing where
-  leer     = Kartenspiel False False False False False False False False False
-  resultat = foldl (flip addKarte) leer $
-    map (toEnum . pred . read . (:[])) karten
+  eingabeAlsKarte = map (toEnum . pred . read . (:[])) karten
+  resultat = foldl (flip addKarte) spielende eingabeAlsKarte
 
 -- Das selbe nur mit Exceptions
 parseKartenspiel :: String -> Kartenspiel

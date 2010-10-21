@@ -39,6 +39,23 @@ Im Spielmodus zieht der Computer stets den Zug, der den h"ochsten Erwartungswert
 hat.  Nach vielen Spielen sollte sich das Ergebnis dem berechneten Resultat
 angleichen.
 
+\section{Caching}
+Aufgrund der Tatsache, dass der Spielbaum recht gro"s ist, dauert es eine Weile,
+ein aufwendiges Spiel zu analysieren.  Da es jedoch nur insgesamt 512 m"ogliche
+Spielst"ande gibt (Jede Karte kann entweder auf- oder zugedeckt sein; also $2^9
+= 512$ M"oglichkeiten), und der Erwartungswert eines Spielstandes unabh"angig
+von vorherigen Z"ugen ist, liegt es nahe, die Ergebnisse in geeigneter Form
+zwischenzuspeichern.
+
+Der Zwischenspeicher ist in diesem Fall als Array umgesetzt, dass einfach alle
+m"oglichen Spielst"ande als Indizes gegen die Erwartungswerte stellt.  Die Werte
+im Array werden von den richtigen statistischen Funktionen berechnet, anstatt
+sich jedoch rekursiv aufzurufen greifen sie einfach auf den Cache zu.  Weil
+Haskell nun aber die Werte nur bei Bedarf generiert, werden die Elemente des
+faulen Arrays eben auch nur bei Bedarg berechnet.  Dies macht die L"osung
+einfach, umst"andlicher Code, um zu pr"ufen, ob der Wert schon berechnet wurde,
+entf"allt, weil bereits im Laufzeitsystem eingebaut.
+
 \chapter{Bedienung}
 Das Programm l"asst sich in verschiedenen Modi starten.  Man kann sowohl einen
 bestimmten Spielstand analysieren, als auch interaktiv gegen den Computer
@@ -106,7 +123,7 @@ werden gesammelt und als "ubersichtliche Statistik ausgegeben.  Die gew"urfelten
 Zahlen werden vom Zufallsgenerator des Systems bestimmt, somit ist die Ausgabe
 des Programms bei jedem Lauf mit hoher Wahrscheinlichkeit unterschiedlich.
 
-Das durchschnittliche Ergebnis nach vielen (c.\,a. 500) Spielen sollte der
+Das durchschnittliche Ergebnis nach vielen (c.\,a. 10000) Spielen sollte der
 Ausgabe der Analysefunktion "ahneln und kann als Kontrolle verwendet werden.
 
 \subsection*{Beispiel}
