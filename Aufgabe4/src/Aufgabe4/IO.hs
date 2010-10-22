@@ -99,15 +99,19 @@ spieleNmal n v gen ks = do
   return (resultat : resultate, gen'')
 
 -- Analysiert einen Spielstand und gibt ein schönes Resultat aus.
-schoeneAnalyse :: Kartenspiel -> String
-schoeneAnalyse ks = printf "Erwartungswert: %f\nDetails:\n%s"
-  (bewerteKartenspiel ks) ratings where
+schoeneAnalyse :: Kartenspiel -> Int -> String
+schoeneAnalyse ks x | x < 1 || x > 12 = error msg
+                    | otherwise       = printf
+  "Erwartungswert: %f\n\n%s" (bewerteKartenspiel ks) ratings where
+  msg         = "Aufgabe4.IO.schoeneAnalyse: Ungültiger Parameter n: " ++ show x
   kandidaten  = map (\n -> (n,getKandidaten n ks)) [2..12]
   showAuswahl (Left k)      = show $ (fromEnum k + 1)
-  showAuswahl (Right (a,b)) = show (fromEnum a + 1) ++ ", " ++ show (fromEnum b + 1)
+  showAuswahl (Right (a,b)) = show (fromEnum a+1) ++ ", " ++ show (fromEnum b+1)
   ratings     = kandidaten >>= kandidatenliste -- Teil 1 der Ausgabe
-  kandidatenliste (n,lst) = (printf "  Würfelergebnis %2d\nErwartungswert: %2f\
-    \\nKandidaten:\n%s" n ew liste) :: String where
+  kandidatenliste (n,lst)
+    | x /= 1 && n /= x = ""
+    | otherwise = (printf "Würfelergebnis %2d\n  Erwartungswert: %2f\
+    \\n  Kandidaten:\n%s\n" n ew liste) :: String where
     ew | null lst  = punkte ks
        | otherwise = maximum $ map snd lst
     liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"

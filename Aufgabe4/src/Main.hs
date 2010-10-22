@@ -39,8 +39,8 @@ optionsbeschreibungen =
     "den Computer spielen lassen"
   , Option "s"  ["spielstand"] (ReqArg (\s o -> o {spielstand =
     parseKartenspiel s}) "SPIELSTAND") "Zu verwendenden Spielstand setzen"
-  , Option "n"  ["anzahl"] (ReqArg (\n o -> o {anzahlSpiele = read n}) "ZAHL")
-    "Anzahl der Spiele setzen"
+  , Option "n"  ["anzahl","augenzahl"]
+    (ReqArg (\n o -> o {anzahlSpiele = read n}) "N") "Anzahl der Spiele setzen"
   , Option "v"  ["verbose"] (NoArg $ \o -> o {verbosity = 1 + verbosity o})
     "Gebe mehr Informationen aus"
   ]
@@ -52,8 +52,9 @@ hilfe = usageInfo header optionsbeschreibungen where
   \Die Eingabe der Spielstände erfolgt als Liste von Ziffern.  Alle Ziffern,\n\
   \die angegeben wurden sind auch die Karten, die noch nicht umgedreht sind.\n\
   \So entspricht etwa \"12389\" einem Spielstand, bei dem die Karten 4, 5, 6\n\
-  \und 7 bereits umgedrehts sind.\n\
-  \  Das Programm kennt verschiedene Modi, probieren sie es einfach mal aus!"
+  \und 7 bereits umgedreht sind.\n\
+  \  Das Programm kennt verschiedene Modi, probieren sie es einfach mal aus!\n\
+  \\nParameter:\n"
 
 makeOptionen :: [String] -> Optionen
 makeOptionen cmdArgs = if null errors then appliedOptions
@@ -75,7 +76,7 @@ main = do
   when (v >= 2) (putStrLn $ "Führe Funktionsmodus aus: " ++ show funktion)
   case funktion of
     Hilfe -> putStrLn hilfe
-    Analysiere -> putStrLn $ schoeneAnalyse zustand
+    Analysiere -> putStrLn $ schoeneAnalyse zustand n
     SpieleAutomatisch -> do
       when (n < 0) (error $ printf "Anzahl Spiele (%d) negativ." n)
       gen <- getStdGen

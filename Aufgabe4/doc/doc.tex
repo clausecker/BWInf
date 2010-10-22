@@ -82,7 +82,9 @@ Parameter sind verf"ugbar, rufen Sie das Programm mit dem Schalter \texttt
   Spielstand kann wahlweise auch ohne vorangestelltes \texttt{-s} gesetzt
   werden.
 \item[-\,n \textit{x}] Setzt die Anzahl der Spiele, die der Computer gegen sich
-  selbst spielt auf \textit{x}.
+  selbst spielt auf \textit{x}.  Falls der Analysemodus benutzt wird, definiert
+  dieser Schalter, dass nur Informationen "uber die entsprechende Augenzahl von
+  Interesse sind.
 \item[-\,v] Gebe mehr Informationen aus.  Mehrfache Angabe des Parameters
   \texttt{-v} gibt noch mehr Informationen aus.\footnote{Diese Funktion ist
   haupts"achlich zur Fehlersuche gedacht unf funktioniert nicht fehlerfrei.}
@@ -97,6 +99,11 @@ Die Erwartungswerte sind nach W"urfelaugen aufgef"achert.  Zur Kontrolle kann
 man den Computer sehr h"aufig gegen sich selbst spielen lassen und die
 Ergebnisse vergleichen.
 
+Wie von der Aufgabenstellung gefordert, kann man sich auch einfach den besten
+Wurf ausgeben lassen, dazu dient der Parameter \texttt{-n}.  Unter Angabe dieses
+wird nur die Detailinformation f"ur entsprechenden Zug ausgegeben. Wenn ein
+ung"ultiger Wert gesetzt wurde, bricht das Programm mit einer Fehlermeldung ab.
+
 \subsection*{Beispiel}
 Das Programm gibt eine Ausgabe in folgendem Format aus. Die erste Zeile gibt den
 Erwartungswert aus -- also das zu erwartende Durchschnittsergebnis nach sehr
@@ -108,10 +115,10 @@ Verzeichnis \emph{Beispiele} des Projektordners zu finden.
 \begin{verbatim}
 $ ./Aufgabe4 -as 123456
 Erwartungswert: 37.98033955380277
-Details:
-  Würfelergebnis  2
-Erwartungswert: 37.50278277892089
-Kandidaten:
+
+Würfelergebnis  2
+  Erwartungswert: 37.50278277892089
+  Kandidaten:
     Auswahl 2,    Erwartung 37.50278277892089
 ... usw ...
 \end{verbatim}
@@ -141,6 +148,30 @@ Verteilung der Ergebnisse:
 	10:     2 (0.80%)
 	12:     1 (0.40%)
     ... usw.
+\end{verbatim}
+
+\section{Hilfsmodus}
+Der Schalter \texttt{-\/-help} l"asst das Programm folgenden Hilfstext ausgeben
+und anschlie"send terminieren:
+
+\begin{verbatim}
+Lösung zur Aufgabe 4 des 29. Bundeswettbewerbs Informatik
+Team Herder, Robert Clausecker.
+
+Die Eingabe der Spielstände erfolgt als Liste von Ziffern.  Alle Ziffern,
+die angegeben wurden sind auch die Karten, die noch nicht umgedreht sind.
+So entspricht etwa "12389" einem Spielstand, bei dem die Karten 4, 5, 6
+und 7 bereits umgedreht sind.
+  Das Programm kennt verschiedene Modi, probieren sie es einfach mal aus!
+
+Parameter:
+
+  -?, -h         --help                     Hilfe anzeigen
+  -a             --analyze                  Spielstand analysieren
+  -c             --auto                     den Computer spielen lassen
+  -s SPIELSTAND  --spielstand=SPIELSTAND    Zu verwendenden Spielstand setzen
+  -n N           --anzahl=N, --augenzahl=N  Anzahl der Spiele setzen
+  -v             --verbose                  Gebe mehr Informationen aus
 \end{verbatim}
 
 \chapter{Quelltexte}
