@@ -61,9 +61,8 @@ bewertungsCache = listArray arrRange werte where
   werte = map baueCache $ range arrRange
   arrRange = (spielende,startaufstellung)
 
-bewerteKartenspiel = (bewertungsCache !)
-
 bewerteKartenspiel, baueCache :: Kartenspiel -> Double
+bewerteKartenspiel = (bewertungsCache !)
 baueCache !spiel = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen

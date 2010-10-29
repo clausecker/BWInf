@@ -6,13 +6,16 @@ module Main (
 
 import Aufgabe4.IO
 import Aufgabe4.Datentypen (Kartenspiel,startaufstellung)
+
+import Control.Monad.State.Strict
+import Data.List (foldl')
+import qualified Data.Map as Map
+
 import System.Console.GetOpt
 import System.Environment (getArgs)
-import Control.Monad (when)
 import System.Random
-import Control.Monad.Writer (runWriter)
-import Data.List (sort,group)
 import Text.Printf
+
 
 data Modus
   = Hilfe
@@ -24,11 +27,10 @@ data Optionen = Optionen
   { modus :: Modus
   , spielstand :: Kartenspiel
   , anzahlSpiele :: Int
-  , verbosity :: Int
   } deriving (Show)
 
 stdOptionen :: Optionen
-stdOptionen = Optionen Analysiere startaufstellung 1 0
+stdOptionen = Optionen Analysiere startaufstellung 1
 
 optionsbeschreibungen :: [OptDescr (Optionen -> Optionen)]
 optionsbeschreibungen =
@@ -41,8 +43,6 @@ optionsbeschreibungen =
     parseKartenspiel s}) "SPIELSTAND") "Zu verwendenden Spielstand setzen"
   , Option "n"  ["anzahl","augenzahl"]
     (ReqArg (\n o -> o {anzahlSpiele = read n}) "N") "Anzahl der Spiele setzen"
-  , Option "v"  ["verbose"] (NoArg $ \o -> o {verbosity = 1 + verbosity o})
-    "Gebe mehr Informationen aus"
   ]
 
 hilfe :: String
@@ -71,24 +71,21 @@ main = do
       funktion = modus optionen
       zustand  = spielstand optionen
       n        = anzahlSpiele optionen
-      v        = verbosity optionen
-  when (v >= 3) (putStrLn $ "Optionen: " ++ show optionen)
-  when (v >= 2) (putStrLn $ "Führe Funktionsmodus aus: " ++ show funktion)
   case funktion of
     Hilfe -> putStrLn hilfe
     Analysiere -> putStrLn $ schoeneAnalyse zustand n
     SpieleAutomatisch -> do
       when (n < 0) (error $ printf "Anzahl Spiele (%d) negativ." n)
       gen <- getStdGen
-      let ((stats,_),msg) = runWriter $ spieleNmal n v gen zustand
+      let (stats,_) = runState (spieleNmal n zustand) gen
           n'              = fromIntegral n :: Double
-          gruppiert       = group $ sort stats
-          anzahlen        = gruppiert >>= \x -> return (length x,head x)
-          relAnzahlen     = map (\(x,_) -> fromIntegral x / n' * 100) anzahlen
-          zusammen        = zipWith (\(a,x) r -> (a,r,x)) anzahlen relAnzahlen
+          gruppiere       = foldl' (\m x -> Map.insertWith' (+) x 1 m) Map.empty
+          anzahlen        = Map.toList $ gruppiere stats
+          relAnzahlen     = map (\(_,x) -> fromIntegral x / n' * 100) anzahlen
+          zusammen        = zipWith (\(x,a) r -> (a,r,x)) anzahlen relAnzahlen
           durchschnitt    = sum $ map (\x -> fromIntegral x / n') stats
-      putStrLn msg -- Erstmal das ganze Geschwurbel ausgeben...
+
       printf "Statistik aus %d Spielen:\n\
              \Durchschnittliches Ergebnis: %f\n\
              \Verteilung der Ergebnisse:\n" n durchschnitt
-      mapM_ (\(a,r,x) -> printf "\t%2d: %5d (%5.2f%%)\n" x a r) zusammen
+      mapM_ (\(a,r,x) -> printf "\t%2d: %5d (%5.2f%%)\n" x (a::Int) r) zusammen

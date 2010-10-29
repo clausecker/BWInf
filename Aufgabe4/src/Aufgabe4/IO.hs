@@ -1,5 +1,6 @@
 -- Modul zur Ein- und Ausgabe, Interaktion, etc.
 -- Alle Funktionen geben Informationen nach ihrem verbosity level aus.
+{-#LANGUAGE BangPatterns #-}
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
@@ -8,11 +9,13 @@ module Aufgabe4.IO (
 
 import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
-import Control.Monad.Writer
-import Text.Printf
+
 import Data.List (maximumBy)
-import System.Random
 import Data.Maybe (fromJust)
+import Control.Monad.State.Strict
+
+import System.Random
+import Text.Printf (printf)
 
 {- Eingabeformat:
 Das Kartenspiel wird als Ziffernfolge eingelesen und sollte recht selbsterklä-
@@ -38,65 +41,35 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
 -- Funktion lässt den Computer einen Zug machen.
-macheZug :: Int -> Int -> Kartenspiel -> Writer String Kartenspiel
-macheZug verbosity augenzahl ks = do
-  when (verbosity >= 3)
-    (tell "\n\nBerechne mögliche Züge...")
-  let kandidaten      = getKandidaten augenzahl ks
-      tellZuege (a,w) = tell $ printf "\n  Auswahlmöglichkeit: %s\n\
-        \  Bewertung: %s" (show a) (show w)
-  -- Wir geben die Züge aus...
-  when (verbosity >= 3) (mapM_ tellZuege kandidaten)
-  -- Und ermitteln den besten
-  if null kandidaten -- Besser Maybe?
-    then do
-      when (verbosity >= 2) (tell "\nKein Zug möglich. Spiel zu Ende")
-      return ks
-    else do
-      let (zug,wertung) = maximumBy (\(_,x) (_,y) -> compare x y) kandidaten
-      when (verbosity >= 2) (tell $ printf
-        "\nZiehe %s\n  (Wertung: %s)" (show zug) (show wertung))
-      return $ wendeAuswahlAn ks zug
+macheZug :: Int -> Kartenspiel -> Kartenspiel
+macheZug !augenzahl !ks | null kandidaten = ks -- Bei Spielende ändern wir nichts
+                       | otherwise       = wendeAuswahlAn ks zug where
+  kandidaten = getKandidaten augenzahl ks -- Wenn null, dann Spiel Ende.
+  -- Vergleicht nach Bewertungen
+  (zug,_)    = maximumBy ((.snd) . (compare . snd)) kandidaten
+
+-- Hilfsfunktion für Zufall, der Generator ist ein Zustand.
+randomRm :: (RandomGen g, Random a) => (a,a) -> State g a
+randomRm bereich = do
+  g <- get
+  let (a,g') = randomR bereich g
+  put g'
+  return a
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
--- zurückgegeben.
-computerSpiel :: RandomGen g => Int -> g -> Kartenspiel -> Writer String (Int,g)
-computerSpiel v gen ks = do
-  when (v >= 1) $ tell "\nSpiele gegen Computer... "
-  when (v >= 2) $ tell $ "\nAnfangszustand: " ++ show ks
-  -- Die Nachfolgende Schleife hat einen Parameter vom Typ
-  --  RandomGen g => Writer (Kartenspiel,g,Bool)
-  let spielschleife = until (\(Writer ((_,_,x),_)) -> x) $ \x -> do
-        (karten,g,_) <- x
-        let (auge1,g' ) = randomR (1,6) g  -- Erstes  Auge
-            (auge2,g'') = randomR (1,6) g' -- Zweites Auge
-            augen       = auge1 + auge2
-        when (v >= 3) $ tell $ printf "\nWürfle...\n\
-          \  Erstes  Auge: %d\n  Zweites Auge: %d" auge1 auge2
-        when (v >= 2) $ tell $ printf "\nWürfle %d" augen
-        karten' <- macheZug v augen karten
-        if (karten' == karten) -- Spiel vorbei?
-          then return (karten,g'',True)
-          else do
-            when (v >= 2) $ tell $ "\nZustand nach Zug: " ++ show karten'
-            return (karten',g'',False)
-  (ks',g,_) <- spielschleife $ return (ks,gen,False)
-  let wertung = punkte ks'
-  when (v == 1) $ tell $ printf "(%d)" wertung
-  when (v > 1) $ tell $ "\nEndergebnis: " ++ show wertung
-  return (wertung,g)
+-- mit dem neuen Generator zurückgegeben.
+computerSpiel :: RandomGen g => Kartenspiel -> State g Int
+computerSpiel ks = do
+  auge1 <- randomRm (1,6) -- Der Generator ist der Zustand
+  auge2 <- randomRm (1,6)
+  let augen = auge1 + auge2
+      ks'   = macheZug augen ks
+  if ks == ks'
+    then return $ punkte ks
+    else computerSpiel ks'
 
-spieleNmal :: RandomGen g => Int -> -- Anzahl der Spiele; wie oben
-  Int -> g -> Kartenspiel -> Writer String ([Int],g)
-spieleNmal 0 _ gen _  = return ([],gen)
-spieleNmal n v gen ks = do
-  when (v >= 1) $ tell $ printf "\nSpiele %d mal..." n
-  when (v < -2) $ tell $ printf "\nNoch %d Spiele" n
-  let v' | v > 0     = -v -- Hack: Wir wollen obige Nachricht nur einmal
-         | otherwise =  v -- ausgeben.
-  (resultat,gen') <- computerSpiel v gen ks
-  (resultate,gen'') <- spieleNmal (n - 1) v' gen' ks
-  return (resultat : resultate, gen'')
+spieleNmal :: RandomGen g => Int -> Kartenspiel -> State g [Int]
+spieleNmal = flip (.) computerSpiel . replicateM
 
 -- Analysiert einen Spielstand und gibt ein schönes Resultat aus.
 schoeneAnalyse :: Kartenspiel -> Int -> String

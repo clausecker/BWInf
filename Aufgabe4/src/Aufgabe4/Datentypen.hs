@@ -7,7 +7,7 @@ module Aufgabe4.Datentypen (
   spielende,
   auswahlAnwendbar,
   wendeAuswahlAn,
-  addKarte,
+  addKarte
 ) where
 
 import Data.Ix
