@@ -29,9 +29,9 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 {-# SPECIALISE computerSpiel :: Kartenspiel -> State StdGen Int #-}
 computerSpiel :: RandomGen g => Kartenspiel -> State g Int
 computerSpiel ks = do
-  let randomRm bereich = State $ \g -> randomR bereich g
-  auge1 <- randomRm (1,6) -- Der Generator ist der Zustand
-  auge2 <- randomRm (1,6)
+  let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
+  auge1 <- random16
+  auge2 <- random16
   let augen = auge1 + auge2
       ks'   = macheZug augen ks
   if ks == ks'
