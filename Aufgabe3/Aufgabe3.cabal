@@ -6,7 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: base -any, bytestring -any, containers -any,
+build-depends: base -any, base -any, bytestring -any,
+               bytestring -any, containers -any, containers -any, mtl -any,
                mtl -any
 stability:
 homepage:
@@ -16,36 +17,11 @@ synopsis:
 description: .
 category:
 author:
-tested-with:
+tested-with: GHC -any
 data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
-exposed-modules: Aufgabe3.Datatypes Aufgabe3.Algorithmen
-                 Aufgabe3.IO
-exposed: True
-buildable: True
-build-tools:
-cpp-options:
-cc-options:
-ld-options:
-pkgconfig-depends:
-frameworks:
-c-sources:
-extensions:
-extra-libraries:
-extra-lib-dirs:
-includes:
-install-includes:
-include-dirs:
-hs-source-dirs: src
-other-modules:
-ghc-prof-options:
-ghc-shared-options:
-ghc-options:
-hugs-options:
-nhc98-options:
-jhc-options:
  
 executable: Aufgabe3
 main-is: Main.hs
@@ -64,7 +40,7 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules:
+other-modules: Aufgabe3.Datatypes Aufgabe3.Algorithmen Aufgabe3.IO
 ghc-prof-options:
 ghc-shared-options:
 ghc-options:

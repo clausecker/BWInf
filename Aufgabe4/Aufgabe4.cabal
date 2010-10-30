@@ -6,8 +6,7 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: array -any, array -any, base -any, base -any,
-               containers -any, containers -any, mtl -any, mtl -any, random -any,
+build-depends: array -any, base >=4.0.0, containers -any, mtl -any,
                random -any
 stability:
 homepage:
