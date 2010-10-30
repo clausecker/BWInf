@@ -1,0 +1,83 @@
+$./aufgabe4
+Erwartungswert: 33.03612159466835
+
+Würfelergebnis  2
+  Erwartungswert: 28.813826775742445
+  Kandidaten:
+    Auswahl 2,    Erwartung 28.813826775742445
+
+Würfelergebnis  3
+  Erwartungswert: 30.116549078795902
+  Kandidaten:
+    Auswahl 1, 2, Erwartung 24.594850538147696
+    Auswahl 3,    Erwartung 30.116549078795902
+
+Würfelergebnis  4
+  Erwartungswert: 30.593381762600504
+  Kandidaten:
+    Auswahl 1, 3, Erwartung 25.07824433577175
+    Auswahl 4,    Erwartung 30.593381762600504
+
+Würfelergebnis  5
+  Erwartungswert: 31.728469915331033
+  Kandidaten:
+    Auswahl 1, 4, Erwartung 25.12469858630826
+    Auswahl 2, 3, Erwartung 25.353345314907962
+    Auswahl 5,    Erwartung 31.728469915331033
+
+Würfelergebnis  6
+  Erwartungswert: 32.50172846220671
+  Kandidaten:
+    Auswahl 1, 5, Erwartung 28.078495175734464
+    Auswahl 2, 4, Erwartung 27.28871235015387
+    Auswahl 6,    Erwartung 32.50172846220671
+
+Würfelergebnis  7
+  Erwartungswert: 33.303774459188226
+  Kandidaten:
+    Auswahl 1, 6, Erwartung 28.57873797079544
+    Auswahl 2, 5, Erwartung 27.909964407208413
+    Auswahl 3, 4, Erwartung 26.35189998160661
+    Auswahl 7,    Erwartung 33.303774459188226
+
+Würfelergebnis  8
+  Erwartungswert: 34.67782035174814
+  Kandidaten:
+    Auswahl 1, 7, Erwartung 30.000415898266453
+    Auswahl 2, 6, Erwartung 28.578783726403774
+    Auswahl 3, 5, Erwartung 29.185422055905544
+    Auswahl 8,    Erwartung 34.67782035174814
+
+Würfelergebnis  9
+  Erwartungswert: 36.12715951096974
+  Kandidaten:
+    Auswahl 1, 8, Erwartung 31.202208241366403
+    Auswahl 2, 7, Erwartung 29.69349826256583
+    Auswahl 3, 6, Erwartung 30.158330105082214
+    Auswahl 4, 5, Erwartung 29.24608079142369
+    Auswahl 9,    Erwartung 36.12715951096974
+
+Würfelergebnis 10
+  Erwartungswert: 33.546045849574554
+  Kandidaten:
+    Auswahl 1, 9, Erwartung 33.546045849574554
+    Auswahl 2, 8, Erwartung 31.60591625087497
+    Auswahl 3, 7, Erwartung 30.97228658878643
+    Auswahl 4, 6, Erwartung 30.53606081081319
+
+Würfelergebnis 11
+  Erwartungswert: 33.21405775685236
+  Kandidaten:
+    Auswahl 2, 9, Erwartung 33.21405775685236
+    Auswahl 3, 8, Erwartung 32.35929219888708
+    Auswahl 4, 7, Erwartung 31.711184635412256
+    Auswahl 5, 6, Erwartung 31.331076534424806
+
+Würfelergebnis 12
+  Erwartungswert: 34.264145594389824
+  Kandidaten:
+    Auswahl 3, 9, Erwartung 34.264145594389824
+    Auswahl 4, 8, Erwartung 33.27167621044128
+    Auswahl 5, 7, Erwartung 32.82614332276536
+
+

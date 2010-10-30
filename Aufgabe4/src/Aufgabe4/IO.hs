@@ -4,14 +4,14 @@
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
-  spieleNmal,
-  computerSpiel
+  spielauswertung
 )where
 
 import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
 import Data.Maybe (fromJust)
+import qualified Data.Map as Map
 import Control.Monad.State.Strict
 
 import System.Random
@@ -40,14 +40,12 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
   resultat = fromJust (parseKartenspielS karten)
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
--- Hilfsfunktion für Zufall, der Generator ist ein Zustand.
-randomRm :: (RandomGen g, Random a) => (a,a) -> State g a
-randomRm bereich = State $ \g -> randomR bereich g
-
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.
+{-# SPECIALISE computerSpiel :: Kartenspiel -> State StdGen Int #-}
 computerSpiel :: RandomGen g => Kartenspiel -> State g Int
 computerSpiel ks = do
+  let randomRm bereich = State $ \g -> randomR bereich g
   auge1 <- randomRm (1,6) -- Der Generator ist der Zustand
   auge2 <- randomRm (1,6)
   let augen = auge1 + auge2
@@ -55,9 +53,6 @@ computerSpiel ks = do
   if ks == ks'
     then return $ punkte ks
     else computerSpiel ks'
-
-spieleNmal :: RandomGen g => Int -> Kartenspiel -> State g [Int]
-spieleNmal = flip (.) computerSpiel . replicateM
 
 -- Analysiert einen Spielstand und gibt ein schönes Resultat aus.
 schoeneAnalyse :: Kartenspiel -> Int -> String
@@ -77,3 +72,29 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
        | otherwise = maximum $ map snd lst
     liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
       (showAuswahl k ++ ",") r) :: String
+
+-- Funktion führt n Spiele aus und gibt ein Resultatat zurück
+{-# SPECIALISE spielauswertung :: Kartenspiel -> Int -> State StdGen String #-}
+spielauswertung :: RandomGen g => Kartenspiel -> Int -> State g String
+spielauswertung ks n | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
+                     | otherwise = do
+  let n'           = fromIntegral n :: Double -- Hilfsfunktionen
+      iterateM :: Monad m =>  (a -> m a) -> a -> Int -> m a
+      iterateM _ !x 0 = return x
+      iterateM f !x i = f x >>= \x' -> iterateM f x' (i - 1)
+      schritt st = do -- Diese Funktion führt ein Spiel aus und fügt es in die
+        wertung <- computerSpiel ks -- Liste ein.
+        return (Map.insertWith' (+) wertung 1 st)
+  -- Der nachfolgende Block berechnet die gesamte Statistik.
+  werteliste <- iterateM schritt Map.empty n
+  let anzahlen     = Map.toList werteliste
+      relAnzahlen  = map (\(_,a) -> fromIntegral a / n' * 100) anzahlen
+      zusammen     = zipWith (\(x,a) r -> (x,(a::Int),r)) anzahlen relAnzahlen
+      durchschnitt = sum $ map
+        (\(x,a) -> fromIntegral x * fromIntegral a / n') anzahlen
+      msg1 = printf "Statistik aus %d Spielen:\n\
+         \Durchschnittliches Ergebnis: %f\n\
+         \Verteilung der Ergebnisse:\n" n durchschnitt
+      -- Wie auch oben: x: Ergebnisnummer, a: Anzahl, r: relative Anzahl
+      msg2 = zusammen >>= \(x,a,r) -> printf "\t%2d: %7d (%5.2f%%)\n" x a r
+  return (msg1 ++ msg2)

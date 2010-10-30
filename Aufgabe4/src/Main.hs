@@ -9,13 +9,10 @@ import Aufgabe4.IO
 import Aufgabe4.Datentypen (Kartenspiel,startaufstellung)
 
 import Control.Monad.State.Strict
-import qualified Data.Map as Map
 
 import System.Console.GetOpt
 import System.Environment (getArgs)
 import System.Random
-import Text.Printf
-
 
 data Modus
   = Hilfe
@@ -75,23 +72,5 @@ main = do
     Hilfe -> putStrLn hilfe
     Analysiere -> putStrLn $ schoeneAnalyse zustand n
     SpieleAutomatisch -> do
-      when (n < 0) (error $ printf "Anzahl Spiele (%d) negativ." n)
       gen <- getStdGen
-      let n'           = fromIntegral n :: Double -- Hilfsfunktionen
-          iterateM :: Monad m =>  (a -> m a) -> a -> Int -> m a
-          iterateM _ !x 0 = return x
-          iterateM f !x i = f x >>= \x' -> iterateM f x' (i - 1)
-          -- Der nachfolgende Block berechnet die gesamte Statistik.
-          schritt st = do -- Diese Funktion führt ein Spiel aus.
-            wertung <- computerSpiel zustand
-            return (Map.insertWith' (+) wertung 1 st)
-          anzahlen     = Map.toList . fst . runState (iterateM schritt Map.empty n) $ gen
-          relAnzahlen  = map (\(_,a) -> fromIntegral a / n' * 100) anzahlen
-          zusammen     = zipWith (\(x,a) r -> (x,a,r)) anzahlen relAnzahlen
-          durchschnitt = sum $ map
-            (\(x,a) -> fromIntegral x * fromIntegral a / n') anzahlen
-      printf "Statistik aus %d Spielen:\n\
-             \Durchschnittliches Ergebnis: %f\n\
-             \Verteilung der Ergebnisse:\n" n durchschnitt
-      -- Wie auch oben: x: Ergebnisnummer, a: Anzahl, r: relative Anzahl
-      mapM_ (\(x,a,r) -> printf "\t%2d: %5d (%5.2f%%)\n" x (a::Int) r) zusammen
+      putStrLn . fst $ runState (spielauswertung zustand n) gen
