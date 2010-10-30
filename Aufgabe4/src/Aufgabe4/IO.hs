@@ -4,13 +4,13 @@
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
-  spieleNmal
+  spieleNmal,
+  computerSpiel
 )where
 
 import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
-import Data.List (maximumBy)
 import Data.Maybe (fromJust)
 import Control.Monad.State.Strict
 
@@ -40,21 +40,9 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
   resultat = fromJust (parseKartenspielS karten)
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
--- Funktion lässt den Computer einen Zug machen.
-macheZug :: Int -> Kartenspiel -> Kartenspiel
-macheZug !augenzahl !ks | null kandidaten = ks -- Bei Spielende ändern wir nichts
-                       | otherwise       = wendeAuswahlAn ks zug where
-  kandidaten = getKandidaten augenzahl ks -- Wenn null, dann Spiel Ende.
-  -- Vergleicht nach Bewertungen
-  (zug,_)    = maximumBy ((.snd) . (compare . snd)) kandidaten
-
 -- Hilfsfunktion für Zufall, der Generator ist ein Zustand.
 randomRm :: (RandomGen g, Random a) => (a,a) -> State g a
-randomRm bereich = do
-  g <- get
-  let (a,g') = randomR bereich g
-  put g'
-  return a
+randomRm bereich = State $ \g -> randomR bereich g
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.

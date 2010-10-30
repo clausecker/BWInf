@@ -3,11 +3,13 @@
 module Aufgabe4.Statistik (
   bewerteKartenspiel,
   getKandidaten,
-  punkte
+  punkte,
+  macheZug
 ) where
 
 import Aufgabe4.Datentypen
 import Data.Array
+import Data.List (maximumBy)
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
 wahrscheinlichkeitAugen :: [Double]
@@ -58,8 +60,8 @@ erst dann berechnet. (Und berechnet wahrscheinlich gleich noch ein paar mehr...)
 
 bewertungsCache :: Array Kartenspiel Double
 bewertungsCache = listArray arrRange werte where
-  werte = map baueCache $ range arrRange
-  arrRange = (spielende,startaufstellung)
+  werte         = map baueCache $ range arrRange
+  arrRange      = (spielende,startaufstellung)
 
 bewerteKartenspiel, baueCache :: Kartenspiel -> Double
 bewerteKartenspiel = (bewertungsCache !)
@@ -79,3 +81,21 @@ getKandidaten zahl ks | zahl < 2 || zahl > 12 = error msg
   kandidaten = filter (auswahlAnwendbar ks) $ kombinationen !! (zahl - 2)
   wertungen = map (bewerteKartenspiel . wendeAuswahlAn ks) kandidaten
   msg = "Seit wann kann man " ++ show zahl ++ " würfeln?"
+
+-- Wir cachen den besten Zug für die Performance.
+zugCache :: Array (Int,Kartenspiel) Kartenspiel
+zugCache = listArray arrRange werte where
+  werte    = map baueZugCache $ range arrRange
+  arrRange = ((2,spielende),(12,startaufstellung))
+
+-- Funktion lässt den Computer einen Zug machen.
+macheZug :: Int -> Kartenspiel -> Kartenspiel
+macheZug = curry $ (zugCache !)
+-- Bei Spielende ändern wir nichts
+
+baueZugCache :: (Int,Kartenspiel) -> Kartenspiel
+baueZugCache (augenzahl,ks) | null kandidaten = ks
+                            | otherwise       = wendeAuswahlAn ks zug where
+  kandidaten = getKandidaten augenzahl ks -- Wenn null, dann Spiel Ende.
+  -- Vergleicht nach Bewertungen
+  (zug,_)    = maximumBy ((.snd) . (compare . snd)) kandidaten
