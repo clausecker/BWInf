@@ -1,5 +1,4 @@
 -- Hauptprogram
-{-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 {-#LANGUAGE BangPatterns #-}
 module Main (
   main
@@ -7,8 +6,6 @@ module Main (
 
 import Aufgabe4.IO
 import Aufgabe4.Datentypen (Kartenspiel,startaufstellung)
-
-import Control.Monad.State.Strict
 
 import System.Console.GetOpt
 import System.Environment (getArgs)
@@ -24,7 +21,7 @@ data Optionen = Optionen
   { modus :: Modus
   , spielstand :: Kartenspiel
   , anzahlSpiele :: Int
-  } deriving (Show)
+  }
 
 stdOptionen :: Optionen
 stdOptionen = Optionen Analysiere startaufstellung 1
@@ -37,7 +34,7 @@ optionsbeschreibungen =
   , Option "c"  ["auto"] (NoArg $ \o -> o {modus = SpieleAutomatisch})
     "den Computer spielen lassen"
   , Option "s"  ["spielstand"] (ReqArg (\s o -> o {spielstand =
-    parseKartenspiel s}) "SPIELSTAND") "Zu verwendenden Spielstand setzen"
+    parseKartenspiel s}) "SPIELSTAND") "Spielstand setzen"
   , Option "n"  ["anzahl","augenzahl"]
     (ReqArg (\n o -> o {anzahlSpiele = read n}) "N") "Anzahl der Spiele setzen"
   ]
@@ -73,4 +70,4 @@ main = do
     Analysiere -> putStrLn $ schoeneAnalyse zustand n
     SpieleAutomatisch -> do
       gen <- getStdGen
-      putStrLn . fst $ runState (spielauswertung zustand n) gen
+      putStrLn $ spielauswertung zustand n gen

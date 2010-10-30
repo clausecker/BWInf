@@ -1,4 +1,3 @@
-{- # LANGUAGE BangPatterns # -}
 module Aufgabe4.Datentypen (
   Kartenspiel (..),
   Karte (..),
@@ -17,7 +16,7 @@ data Kartenspiel = Kartenspiel
   { karte1 :: !Bool , karte2 :: !Bool , karte3 :: !Bool
   , karte4 :: !Bool , karte5 :: !Bool , karte6 :: !Bool
   , karte7 :: !Bool , karte8 :: !Bool , karte9 :: !Bool
-  } deriving (Show,Eq,Ord,Ix)
+  } deriving (Eq,Ord,Ix)
 
 -- Häufig gebrauchte Werte
 startaufstellung, spielende :: Kartenspiel

@@ -6,7 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: array -any, base -any, containers -any, mtl -any,
+build-depends: array -any, array -any, base -any, base -any,
+               containers -any, containers -any, mtl -any, mtl -any, random -any,
                random -any
 stability:
 homepage:
@@ -16,35 +17,11 @@ synopsis: Aufgabe 4 des 29. BWInf
 description: .
 category:
 author:
-tested-with:
+tested-with: GHC -any
 data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
-exposed-modules: Aufgabe4.Statistik Aufgabe4.Datentypen Aufgabe4.IO
-exposed: True
-buildable: True
-build-tools:
-cpp-options:
-cc-options:
-ld-options:
-pkgconfig-depends:
-frameworks:
-c-sources:
-extensions:
-extra-libraries:
-extra-lib-dirs:
-includes:
-install-includes:
-include-dirs:
-hs-source-dirs: src
-other-modules:
-ghc-prof-options:
-ghc-shared-options:
-ghc-options: -Wall
-hugs-options:
-nhc98-options:
-jhc-options:
  
 executable: Aufgabe4
 main-is: Main.hs
@@ -63,10 +40,10 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules:
+other-modules: Aufgabe4.Statistik Aufgabe4.Datentypen Aufgabe4.IO
 ghc-prof-options:
 ghc-shared-options:
-ghc-options:
+ghc-options: -O3 -Wall -Werror
 hugs-options:
 nhc98-options:
 jhc-options:

@@ -1,6 +1,6 @@
 -- Modul zur Ein- und Ausgabe, Interaktion, etc.
 -- Alle Funktionen geben Informationen nach ihrem verbosity level aus.
-{-#LANGUAGE BangPatterns #-}
+{-# LANGUAGE BangPatterns #-}
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
@@ -10,34 +10,18 @@ module Aufgabe4.IO (
 import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
-import Data.Maybe (fromJust)
 import qualified Data.Map as Map
 import Control.Monad.State.Strict
 
 import System.Random
 import Text.Printf (printf)
 
-{- Eingabeformat:
-Das Kartenspiel wird als Ziffernfolge eingelesen und sollte recht selbsterklä-
-rend sein.  Es werden alle Karten genannt, die noch nicht umgedreht sind, so ist
-z. B. "12589" ein Kartenspiel, bei dem die Karten 3, 4, 6 und 7 umgedreht sind.
-Verbosity:
-  1: Kurzinformationen
-  2: Detaillierte Informationen
-  3: Debug
--}
-
-parseKartenspielS :: String -> Maybe Kartenspiel
-parseKartenspielS karten | all (`elem` ['1'..'9']) karten = Just resultat
-                         | otherwise                      = Nothing where
-  eingabeAlsKarte = map (toEnum . pred . read . (:[])) karten
-  resultat = foldl (flip addKarte) spielende eingabeAlsKarte
-
--- Das selbe nur mit Exceptions
+-- Eingabeformat: Siehe Dokumentation.
 parseKartenspiel :: String -> Kartenspiel
 parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
                         | otherwise                      = error errorMsg where
-  resultat = fromJust (parseKartenspielS karten)
+  resultat = foldl (flip addKarte) spielende eingabeAlsKarte
+  eingabeAlsKarte = map (toEnum . pred . read . (:[])) karten
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
@@ -74,19 +58,18 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
       (showAuswahl k ++ ",") r) :: String
 
 -- Funktion führt n Spiele aus und gibt ein Resultatat zurück
-{-# SPECIALISE spielauswertung :: Kartenspiel -> Int -> State StdGen String #-}
-spielauswertung :: RandomGen g => Kartenspiel -> Int -> State g String
-spielauswertung ks n | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
-                     | otherwise = do
+{-# SPECIALISE spielauswertung :: Kartenspiel -> Int -> StdGen -> String #-}
+spielauswertung :: RandomGen g => Kartenspiel -> Int -> g -> String
+spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
+                       | otherwise = fst . ($g). runState $ do
   let n'           = fromIntegral n :: Double -- Hilfsfunktionen
-      iterateM :: Monad m =>  (a -> m a) -> a -> Int -> m a
-      iterateM _ !x 0 = return x
-      iterateM f !x i = f x >>= \x' -> iterateM f x' (i - 1)
+      iterateM 0 _ !x = return x -- Wendet eine (monadische) Funktion n mal an.
+      iterateM i f !x = f x >>= iterateM (i - 1) f
       schritt st = do -- Diese Funktion führt ein Spiel aus und fügt es in die
         wertung <- computerSpiel ks -- Liste ein.
         return (Map.insertWith' (+) wertung 1 st)
   -- Der nachfolgende Block berechnet die gesamte Statistik.
-  werteliste <- iterateM schritt Map.empty n
+  werteliste <- iterateM n schritt Map.empty
   let anzahlen     = Map.toList werteliste
       relAnzahlen  = map (\(_,a) -> fromIntegral a / n' * 100) anzahlen
       zusammen     = zipWith (\(x,a) r -> (x,(a::Int),r)) anzahlen relAnzahlen

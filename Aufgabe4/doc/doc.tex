@@ -64,10 +64,10 @@ folgenden erkl"art.
 
 \section{Überblick}
 Es folgt eine Auflistung der Betriebsmodi und weiterer Parameter.  Generell
-werden Parameter, die keinen Sinn ergeben ignoriert.  Sollten wiederspr"uchliche
-Parameter gegeben sein, so ist nur der jeweils letzte relevant.\footnote{Weitere
-Parameter sind verf"ugbar, rufen Sie das Programm mit dem Schalter \texttt
-{-\-help} f"ur weitere Informationen auf.}
+werden Parameter, die im geforderten Modus keinen Sinn ergeben ignoriert.
+Sollten wiederspr"uchliche Parameter gegeben sein, so ist nur der jeweils letzte
+relevant.\footnote{Weitere Parameter sind verf"ugbar, rufen Sie das Programm mit
+dem Schalter \texttt {-\-help} f"ur weitere Informationen auf.}
 
 \begin{description}
 \item[-\,-\,help] Zeigt eine \emph{kurze Erl"auterung} der verf"ugbaren
@@ -78,15 +78,16 @@ Parameter sind verf"ugbar, rufen Sie das Programm mit dem Schalter \texttt
   (also keine Karte umgedreht) verwendet.
 \item[-\,-\,auto] L"asst den Computer eine beliebige Anzahl an Spielen \emph
   {gegen sich selbst} spielen.  Die Ergebnisse werden gesammelt und ausgegeben.
-\item[-\,s \textit{x}] Setzt den zu verwendenden Spielstand auf \textit{x}.  Der
+\item[-\,s \textit{x}] Setzt den \emph{Spielstand} auf $x$.  Der
   Spielstand kann wahlweise auch ohne vorangestelltes \texttt{-s} gesetzt
-  werden.
+  werden.  Der Spielstand wird als Ziffernfolge beschrieben, wenn eine Ziffern
+  $n$ gegeben ist, dann ist Karte $n$ noch nicht umgedreht.  Alle Karten, die
+  nicht angegeben sind, gelten als umgedreht.
 \item[-\,n \textit{x}] Setzt die Anzahl der Spiele, die der Computer gegen sich
   selbst spielt auf \textit{x}.  Falls der Analysemodus benutzt wird, definiert
   dieser Schalter, dass nur Informationen "uber die entsprechende Augenzahl von
   Interesse sind.
 \end{description}
-
 Die Argumente werden generell erst dann auf Fehler gepr"uft, wenn sie auch
 wirklich verwendet werden.  Dies steht v"ollig im Einklang mit dem Prinzip der
 Faulheit (\emph{laziness}) von Haskell.
@@ -128,8 +129,19 @@ werden gesammelt und als "ubersichtliche Statistik ausgegeben.  Die gew"urfelten
 Zahlen werden vom Zufallsgenerator des Systems bestimmt, somit ist die Ausgabe
 des Programms bei jedem Lauf mit hoher Wahrscheinlichkeit unterschiedlich.
 
-Das durchschnittliche Ergebnis nach vielen (c.\,a. 10000) Spielen sollte der
-Ausgabe der Analysefunktion "ahneln und kann als Kontrolle verwendet werden.
+Das durchschnittliche Ergebnis nach vielen (c.\,a. 10\,000) Spielen sollte der
+Ausgabe der Analysefunktion "ahneln und kann als Kontrolle verwendet werden. Im
+Beispielverzeichnis sind einige Testl"aufe mit sehr hohen Anzahl an Spielen zu
+finden. Auf meinem Rechner hat die Berechnung von 10\,000\,000~Spielen ungef"ahr
+eine Minute und 40~Sekunden gedauert.\footnote{Das Ergebnis dieses Testlaufes
+ist als Datei \texttt{Beispiel6.dump} im Beispielordner zu finden}
+
+\subsection*{Laufzeit und Speicherverbrauch}
+Wenn $n$ die Anzahl der Spiele ist, dann l"auft das Programm in
+$\mathcal{O}(n)$. Da die Werte sofort weiterverabeitet werden und alle
+tempor"aren Strukturen sofort wieder freigegeben werden k"onnen, ist der
+Speicherverbrauch in der Klasse $\mathcal{O}(1)$, auf meinem Rechner
+c.\,a.~2~MiB.
 
 \subsection*{Beispiel}
 Im folgenden Beispiel wurden 250 Spiele gegen den Computer gespielt.  Um Papier
@@ -167,9 +179,9 @@ Parameter:
   -?, -h         --help                     Hilfe anzeigen
   -a             --analyze                  Spielstand analysieren
   -c             --auto                     den Computer spielen lassen
-  -s SPIELSTAND  --spielstand=SPIELSTAND    Zu verwendenden Spielstand setzen
+  -s SPIELSTAND  --spielstand=SPIELSTAND    Spielstand setzen
   -n N           --anzahl=N, --augenzahl=N  Anzahl der Spiele setzen
-  -v             --verbose                  Gebe mehr Informationen aus
+
 \end{verbatim}
 
 \chapter{Quelltexte}
