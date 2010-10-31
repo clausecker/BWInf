@@ -15,7 +15,6 @@ data Modus
   = Hilfe
   | SpieleAutomatisch
   | Analysiere
-  deriving (Show)
 
 data Optionen = Optionen
   { modus :: Modus
@@ -61,13 +60,8 @@ makeOptionen cmdArgs = if null errors then appliedOptions
 main :: IO ()
 main = do
   rawArgs <- getArgs
-  let optionen = makeOptionen rawArgs
-      funktion = modus optionen
-      zustand  = spielstand optionen
-      n        = anzahlSpiele optionen
+  let (Optionen funktion zustand n) = makeOptionen rawArgs
   case funktion of
     Hilfe -> putStrLn hilfe
     Analysiere -> putStrLn $ schoeneAnalyse zustand n
-    SpieleAutomatisch -> do
-      gen <- getStdGen
-      putStrLn $ spielauswertung zustand n gen
+    SpieleAutomatisch -> getStdGen >>= putStrLn . spielauswertung zustand n

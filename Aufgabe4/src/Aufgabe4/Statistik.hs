@@ -42,9 +42,9 @@ kombinationen =
 punkte :: Kartenspiel -> Int
 punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) = punkte' 0 1 lst where
   lst = [k1,k2,k3,k4,k5,k6,k7,k8,k9]
-  punkte' n _ [] = n
-  punkte' n k (False:xs) = punkte' (n + k) (k + 1) xs
-  punkte' n k (True:xs)  = punkte' n       (k + 1) xs
+  punkte' n !_ [] = n
+  punkte' n  k (False:xs) = punkte' (n + k) (k + 1) xs
+  punkte' n  k (True:xs)  = punkte' n       (k + 1) xs
 
 {-
 Die Nachfolgende Funktion ist die Kernfunktion des Programms.  Sie berechnet den
@@ -68,7 +68,7 @@ bewertungsCache = listArray arrRange werte where
 
 bewerteKartenspiel, baueCache :: Kartenspiel -> Double
 bewerteKartenspiel = (bewertungsCache !)
-baueCache !spiel = sum gewichteteWertungen where
+baueCache !spiel   = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
   bewertungen         = map (map bewerteKartenspiel) angewandteAuswahlen
@@ -79,15 +79,13 @@ baueCache !spiel = sum gewichteteWertungen where
 
 -- Berechnet und wertet alle Kandidaten.
 getKandidaten :: Int -> Kartenspiel -> [(Auswahl,Double)]
-getKandidaten zahl ks | zahl < 2 || zahl > 12 = error msg
-                      | otherwise = zip kandidaten wertungen where
+getKandidaten zahl ks = zip kandidaten wertungen where
   kandidaten = filter (auswahlAnwendbar ks) $ kombinationen !! (zahl - 2)
-  wertungen = map (bewerteKartenspiel . wendeAuswahlAn ks) kandidaten
-  msg = "Seit wann kann man " ++ show zahl ++ " würfeln?"
+  wertungen  = map (bewerteKartenspiel . wendeAuswahlAn ks) kandidaten
 
 -- Wir cachen den besten Zug für die Performance.
 zugCache :: Array (Int,Kartenspiel) Kartenspiel
-zugCache = listArray arrRange werte where
+zugCache   = listArray arrRange werte where
   werte    = map baueZugCache $ range arrRange
   arrRange = ((2,spielende),(12,startaufstellung))
 
@@ -100,5 +98,4 @@ baueZugCache :: (Int,Kartenspiel) -> Kartenspiel
 baueZugCache (augenzahl,ks) | null kandidaten = ks
                             | otherwise       = wendeAuswahlAn ks zug where
   kandidaten = getKandidaten augenzahl ks -- Wenn null, dann Spiel Ende.
-  -- Vergleicht nach Bewertungen
   (zug,_)    = maximumBy (compare `on` snd) kandidaten
