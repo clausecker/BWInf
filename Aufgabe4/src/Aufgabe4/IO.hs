@@ -26,8 +26,7 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.
-{-# SPECIALISE computerSpiel :: Kartenspiel -> State StdGen Int #-}
-computerSpiel :: RandomGen g => Kartenspiel -> State g Int
+computerSpiel :: Kartenspiel -> State StdGen Int
 computerSpiel ks = do
   let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
   auge1 <- random16
@@ -52,14 +51,13 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
     | x /= 1 && n /= x = ""
     | otherwise = (printf "Würfelergebnis %2d\n  Erwartungswert: %2f\
     \\n  Kandidaten:\n%s\n" n ew liste) :: String where
-    ew | null lst  = punkte ks
+    ew | null lst  = fromIntegral $ punkte ks
        | otherwise = maximum $ map snd lst
     liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
       (showAuswahl k ++ ",") r) :: String
 
 -- Funktion führt n Spiele aus und gibt ein Resultatat zurück
-{-# SPECIALISE spielauswertung :: Kartenspiel -> Int -> StdGen -> String #-}
-spielauswertung :: RandomGen g => Kartenspiel -> Int -> g -> String
+spielauswertung :: Kartenspiel -> Int -> StdGen -> String
 spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
                        | otherwise = fst . ($g). runState $ do
   let n'           = fromIntegral n :: Double -- Hilfsfunktionen

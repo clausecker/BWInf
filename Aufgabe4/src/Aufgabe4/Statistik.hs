@@ -39,10 +39,12 @@ kombinationen =
   , [Right (Karte3,Karte9), Right (Karte4,Karte8), Right (Karte5,Karte7)]]-- 12
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
-{-# SPECIALISE punkte :: Kartenspiel -> Double #-}
-punkte :: (Num a, Enum a) => Kartenspiel -> a
-punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) =
-  sum . map snd . filter (not . fst) $ zip [k1,k2,k3,k4,k5,k6,k7,k8,k9] [1..9]
+punkte :: Kartenspiel -> Int
+punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) = punkte' 0 1 lst where
+  lst = [k1,k2,k3,k4,k5,k6,k7,k8,k9]
+  punkte' n _ [] = n
+  punkte' n k (False:xs) = punkte' (n + k) (k + 1) xs
+  punkte' n k (True:xs)  = punkte' n       (k + 1) xs
 
 {-
 Die Nachfolgende Funktion ist die Kernfunktion des Programms.  Sie berechnet den
@@ -71,7 +73,7 @@ baueCache !spiel = sum gewichteteWertungen where
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
   bewertungen         = map (map bewerteKartenspiel) angewandteAuswahlen
   besteBewertungen    = map getBest bewertungen where
-    getBest [] = punkte spiel -- Wir wissen, wenn es keine Möglichkeit gibt,
+    getBest [] = fromIntegral $ punkte spiel -- wenn es keine Möglichkeit gibt,
     getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
   gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
 
