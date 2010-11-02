@@ -27,15 +27,12 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.
 computerSpiel :: Kartenspiel -> State StdGen Int
-computerSpiel ks = do
+computerSpiel !ks = do
   let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
   auge1 <- random16
   auge2 <- random16
-  let augen = auge1 + auge2
-      ks'   = macheZug augen ks
-  if ks == ks'
-    then return $ punkte ks
-    else computerSpiel ks'
+  let ks' = macheZug (auge1 + auge2) ks
+  maybe (return $ punkte ks) computerSpiel ks' -- Nothing, wenn Spiel zu Ende.
 
 -- Analysiert einen Spielstand und gibt ein schönes Resultat aus.
 schoeneAnalyse :: Kartenspiel -> Int -> String
@@ -43,7 +40,7 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
                     | otherwise       = printf
   "Erwartungswert: %f\n\n%s" (bewerteKartenspiel ks) ratings where
   msg         = "Aufgabe4.IO.schoeneAnalyse: Ungültiger Parameter n: " ++ show x
-  kandidaten  = map (\n -> (n,getKandidaten n ks)) [2..12]
+  kandidaten  = map (\n -> (n,uncurry zip $ getKandidaten ks n)) [2..12]
   showAuswahl (Left k)      = show $ (fromEnum k + 1)
   showAuswahl (Right (a,b)) = show (fromEnum a+1) ++ ", " ++ show (fromEnum b+1)
   ratings     = kandidaten >>= kandidatenliste -- Teil 1 der Ausgabe

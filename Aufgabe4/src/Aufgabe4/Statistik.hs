@@ -40,11 +40,12 @@ kombinationen =
 
 -- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
 punkte :: Kartenspiel -> Int
-punkte (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) = punkte' 0 1 lst where
-  lst = [k1,k2,k3,k4,k5,k6,k7,k8,k9]
-  punkte' n !_ [] = n
-  punkte' n  k (False:xs) = punkte' (n + k) (k + 1) xs
-  punkte' n  k (True:xs)  = punkte' n       (k + 1) xs
+punkte ks = case ks of
+  (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) -> punkte' 0 1 lst where
+    lst = [k1,k2,k3,k4,k5,k6,k7,k8,k9]
+    punkte' n !_ [] = n
+    punkte' n  k (False:xs) = punkte' (n + k) (k + 1) xs
+    punkte' n  k (True:xs)  = punkte' n       (k + 1) xs
 
 {-
 Die Nachfolgende Funktion ist die Kernfunktion des Programms.  Sie berechnet den
@@ -68,6 +69,7 @@ bewertungsCache = listArray arrRange werte where
 
 bewerteKartenspiel, baueCache :: Kartenspiel -> Double
 bewerteKartenspiel = (bewertungsCache !)
+{-
 baueCache !spiel   = sum gewichteteWertungen where
   anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
   angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
@@ -76,26 +78,33 @@ baueCache !spiel   = sum gewichteteWertungen where
     getBest [] = fromIntegral $ punkte spiel -- wenn es keine Möglichkeit gibt,
     getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
   gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
+-}
+baueCache !spiel = sum gewichteteWertungen where
+  bewertungen = map (snd . getKandidaten spiel) [2..12]
+  besteBewertungen    = map getBest bewertungen where
+    getBest [] = fromIntegral $ punkte spiel -- wenn es keine Möglichkeit gibt,
+    getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
+  gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
 
 -- Berechnet und wertet alle Kandidaten.
-getKandidaten :: Int -> Kartenspiel -> [(Auswahl,Double)]
-getKandidaten zahl ks = zip kandidaten wertungen where
+getKandidaten :: Kartenspiel -> Int -> ([Auswahl],[Double])
+getKandidaten ks zahl = (kandidaten,wertungen) where
   kandidaten = filter (auswahlAnwendbar ks) $ kombinationen !! (zahl - 2)
   wertungen  = map (bewerteKartenspiel . wendeAuswahlAn ks) kandidaten
 
 -- Wir cachen den besten Zug für die Performance.
-zugCache :: Array (Int,Kartenspiel) Kartenspiel
+zugCache :: Array (Int,Kartenspiel) (Maybe Kartenspiel)
 zugCache   = listArray arrRange werte where
   werte    = map baueZugCache $ range arrRange
   arrRange = ((2,spielende),(12,startaufstellung))
 
 -- Funktion lässt den Computer einen Zug machen.
-macheZug :: Int -> Kartenspiel -> Kartenspiel
+macheZug :: Int -> Kartenspiel -> Maybe Kartenspiel
 macheZug = curry $ (zugCache !)
 -- Bei Spielende ändern wir nichts
 
-baueZugCache :: (Int,Kartenspiel) -> Kartenspiel
-baueZugCache (augenzahl,ks) | null kandidaten = ks
-                            | otherwise       = wendeAuswahlAn ks zug where
-  kandidaten = getKandidaten augenzahl ks -- Wenn null, dann Spiel Ende.
-  (zug,_)    = maximumBy (compare `on` snd) kandidaten
+baueZugCache :: (Int,Kartenspiel) -> Maybe Kartenspiel
+baueZugCache (augenzahl,ks) | null kand = Nothing
+                            | otherwise = Just $ wendeAuswahlAn ks zug where
+  kand    = uncurry zip $ getKandidaten ks augenzahl --Wenn null, dann Spielende
+  (zug,_) = maximumBy (compare `on` snd) kand
