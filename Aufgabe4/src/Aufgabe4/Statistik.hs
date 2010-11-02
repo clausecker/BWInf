@@ -69,16 +69,7 @@ bewertungsCache = listArray arrRange werte where
 
 bewerteKartenspiel, baueCache :: Kartenspiel -> Double
 bewerteKartenspiel = (bewertungsCache !)
-{-
-baueCache !spiel   = sum gewichteteWertungen where
-  anwendbareAuswahlen = map (filter (auswahlAnwendbar spiel)) kombinationen
-  angewandteAuswahlen = map (map $ wendeAuswahlAn spiel) anwendbareAuswahlen
-  bewertungen         = map (map bewerteKartenspiel) angewandteAuswahlen
-  besteBewertungen    = map getBest bewertungen where
-    getBest [] = fromIntegral $ punkte spiel -- wenn es keine Möglichkeit gibt,
-    getBest x  = maximum x    -- dann  müssen wir nicht weiter schauen.
-  gewichteteWertungen = zipWith (*) wahrscheinlichkeitAugen besteBewertungen
--}
+
 baueCache !spiel = sum gewichteteWertungen where
   bewertungen = map (snd . getKandidaten spiel) [2..12]
   besteBewertungen    = map getBest bewertungen where
