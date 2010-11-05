@@ -91,8 +91,7 @@ zugCache   = listArray arrRange werte where
 
 -- Funktion lässt den Computer einen Zug machen.
 macheZug :: Int -> Kartenspiel -> Maybe Kartenspiel
-macheZug = curry $ (zugCache !)
--- Bei Spielende ändern wir nichts
+macheZug = curry (zugCache !)
 
 baueZugCache :: (Int,Kartenspiel) -> Maybe Kartenspiel
 baueZugCache (augenzahl,ks) | null kand = Nothing

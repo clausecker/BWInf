@@ -1,4 +1,4 @@
--- Hauptprogram
+-- Hauptmodul, parst Argumente und ruft die nötigen Funktion auf.
 {-#LANGUAGE BangPatterns #-}
 module Main (
   main
@@ -51,7 +51,7 @@ hilfe = usageInfo header optionsbeschreibungen where
 
 makeOptionen :: [String] -> Optionen
 makeOptionen cmdArgs = if null errors then appliedOptions
-  else error $ unlines $ "Folgende Fehler traten bei der Verarbeitung der \
+  else error . unlines $ "Folgende Fehler traten bei der Verarbeitung der \
     \Argumente auf:" : errors where
   (rawArgs,_,errors) = getOpt Permute optionsbeschreibungen cmdArgs
   -- Wir interpretieren unerkannte Sachen als Spielstand.

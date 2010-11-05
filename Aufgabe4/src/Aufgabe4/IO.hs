@@ -1,5 +1,4 @@
--- Modul zur Ein- und Ausgabe, Interaktion, etc.
--- Alle Funktionen geben Informationen nach ihrem verbosity level aus.
+-- Modul zur Ein- und Ausgabe. Keine der Funktionen führt wirkliches IO aus.
 {-# LANGUAGE BangPatterns #-}
 module Aufgabe4.IO (
   parseKartenspiel,
@@ -20,8 +19,8 @@ import Text.Printf (printf)
 parseKartenspiel :: String -> Kartenspiel
 parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
                         | otherwise                      = error errorMsg where
-  resultat = foldl (flip addKarte) spielende eingabeAlsKarte
-  eingabeAlsKarte = map (toEnum . pred . read . (:[])) karten
+  resultat = foldl addKarte spielende eingabeAlsKarte
+  eingabeAlsKarte = map (toEnum . (subtract 1) . read . (:[])) karten
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
@@ -43,17 +42,16 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
   kandidaten  = map (\n -> (n,uncurry zip $ getKandidaten ks n)) [2..12]
   showAuswahl (Left k)      = show $ (fromEnum k + 1)
   showAuswahl (Right (a,b)) = show (fromEnum a+1) ++ ", " ++ show (fromEnum b+1)
-  ratings     = kandidaten >>= kandidatenliste -- Teil 1 der Ausgabe
-  kandidatenliste (n,lst)
-    | x /= 1 && n /= x = ""
-    | otherwise = (printf "Würfelergebnis %2d\n  Erwartungswert: %2f\
-    \\n  Kandidaten:\n%s\n" n ew liste) :: String where
+  ratings     = kandidaten >>= kandidatenliste
+  kandidatenliste (n,lst) | x `notElem` [1,n] = "" -- 1: Nicht spezifizieren
+                          | otherwise = (printf "Würfelergebnis %2d\n  \
+    \Erwartungswert: %2f\n  Kandidaten:\n%s\n" n ew liste) where
     ew | null lst  = fromIntegral $ punkte ks
        | otherwise = maximum $ map snd lst
     liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
       (showAuswahl k ++ ",") r) :: String
 
--- Funktion führt n Spiele aus und gibt ein Resultatat zurück
+-- Funktion führt n Spiele aus und gibt ein Resultat zurück
 spielauswertung :: Kartenspiel -> Int -> StdGen -> String
 spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
                        | otherwise = fst . ($g). runState $ do
