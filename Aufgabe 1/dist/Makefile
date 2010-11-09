@@ -1,12 +1,22 @@
 #!/usr/bin/make -f
 
-SOURCE = bambus.cfdg
+SOURCE = ../src/bambus.cfdg
+VARIATIONS = ../src/variations.list
 CFDG = cfdg
 CFDGFLAGS = -q
+SHELL = /bin/sh
 
 #Flags zum erzeugen von PNG's oder SVG's
 SVG_FLAG = -V
 PNG_FLAG =
+
+examples: examples_svg examples_png
+
+examples_svg: $(VARIATIONS)
+	sed 's/$$/\.svg/g' $< | xargs $(MAKE)
+
+examples_png: $(VARIATIONS)
+	sed 's/$$/\.png/g' $< | xargs $(MAKE)
 
 #Erzeugt zufällige Ausgabe
 random_svg: $(SOURCE)
@@ -21,3 +31,6 @@ random_png: $(SOURCE)
 
 %.png: $(SOURCE)
 	$(CFDG) $(PNG_FLAG) $(CFDGFLAGS) -v $* -o $@ $<
+
+test:
+	echo $$
