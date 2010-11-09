@@ -3,15 +3,19 @@
 SOURCE = ../src/bambus.cfdg
 VARIATIONS = ../src/variations.list
 CFDG = cfdg
-CFDGFLAGS = -q
+#Die Variablen WIDTH und HEIGHT können optional gesetzt werden.
+CFDGFLAGS = -q $(if $(WIDTH) , -w $(WIDTH)) $(if $(HEIGHT) , -h $(HEIGHT))
 SHELL = /bin/sh
 
 #Flags zum erzeugen von PNG's oder SVG's
 SVG_FLAG = -V
 PNG_FLAG =
 
+.PHONY: clean examples examples_svg examples_png random_svg random_png
+
 examples: examples_svg examples_png
 
+#Die folgenden Ziele lesen die Variantendatei aus und rufen make rekursiv auf.
 examples_svg: $(VARIATIONS)
 	sed 's/$$/\.svg/g' $< | xargs $(MAKE)
 
@@ -32,5 +36,5 @@ random_png: $(SOURCE)
 %.png: $(SOURCE)
 	$(CFDG) $(PNG_FLAG) $(CFDGFLAGS) -v $* -o $@ $<
 
-test:
-	echo $$
+clean:
+	rm -f *.png *.svg
