@@ -5,6 +5,7 @@
 \usepackage {ngerman}
 \usepackage{fancyvrb}
 \usepackage{xcolor}
+\usepackage{textcomp}
 
 \author {Team "`Herder"' -- Robert Clausecker}
 \title {L"osung zur Aufgabe 1}
@@ -18,6 +19,58 @@
 
 \tableofcontents \newpage
 
+\chapter{Bildbeschreibung}
+
+\section{K"unstlerische Gedanken}
+Die Grundidee der Zeichenanweisung war es, eine Art Bambus darzustellen, die der
+traditionellen chinesischen Malerei in abstrakter Form "ahneln soll.  Dazu
+sollen soweit m"oglich ausschlie"slich einfache geometrische Figuren verwendet
+werden.  Aus "asthetischen (und zeitlichen) Gr"unden habe ich in diesem Beispiel
+auf Farbe verzichtet.
+
+Aufgrund meiner mangelnden Erfahrung mit dem Programm CFDG und der starken
+Restriktion der Eingabedatei ist letztlich doch etwas anderes dabei
+herausgekommen.  Trotzdem sehe ich meine (k"unstlerischen) Erwartungen in diesem
+Bild erf"ullt.
+
+Das Bild gleicht jetzt eher einem mehr oder weniger sch"onem Baum, der starke,
+nahezu fraktale Ver"astelungen aufweist.  Je nach Zufallswert kommen sehr
+unterschiedliche Formen zu Tage, mal ist der Baum sehr gestreckt, mal eher wie
+ein Busch -- dies zeigt die gro"se Variation der Ausgabe, die CFDG aus einer
+einzigen Regel erzeugen kann.
+
+\section{Aufbau der Form}
+
+Das Programm verwendet eine einzige Regel, sowie zwei "`von Hand"' hergestellte
+Pfade, um Ausgabe zu erzeugen.  O.\,g. Regel \emph{bambus} kann drei m"ogliche
+Formen erzeugen:
+
+\begin{description}
+\item[Stamm] Es wird ein langer Block erzeugt, an dessen Spitze mit schmalem
+  Abstand (entsprechend der chinesischen Malerei) das n"achste Teilst"uck
+  auf 90\,\% verkleinert angesetzt wird.  Der Stamm ist viermal so lang wie
+  breit und wird aus dem Pfad \emph{stamm} erzeugt. Er erscheint als Form mit
+  einer Wahrscheinlichkeit von 50\,\%. 
+  
+\item[Ast rechts] Diese Form erzeugt eine Verzweigung nach rechts.  Die Form
+  besteht aus einem speziellen Pfad den ich \emph{T-St"uck} nenne,\footnote{Um
+  keine Umlaute in den Bezeichnern zu verwenden, hei"st diese Form im Quelltext
+  \emph{zweig}.} Der Pfad ist nach geometrischen Prinzipien konzipiert, die ich
+  weiter unten erkl"are.  Er erzeugt einen auf 50\,\% skalierten Ast nach rechts
+  und f"uhrt den Stamm mit der gleichen Skalierung wie auch beim Stamm (90\,\%)
+  weiter.  Der Ast hat eine Drehung von c.\,a. 64\textdegree nach rechts, der
+  Stamm wird um etwa 29\textdegree nach rechts gedreht.  Diese Form erscheint
+  mit einer Wahrscheinlichkeit von 25\,\%.
+
+\item[Ast links] Diese Form erzeugt einen Ast nach links und ist eine genaue
+  Spiegelung des Astes nach rechts; sie entsteht auf die gleiche Art und Weise.
+  Auch sie erscheint mit einer Wahrscheinlichkeit von 25\,\%.
+\end{description}
+
+\section{Das T-St"uck}
+
+To be continued. % TODO Fertigmachen!!!
+
 \chapter{Quelltext (bambus.cfdg)}
 
 Weil das zum Formatieren des Quelltextes genutzte Skript \emph{pygmentize} keine
@@ -26,4 +79,8 @@ weiter erh"ohen wollte, gibt es leider kein Highlighting f"ur diese Aufgabe.
 
 Ich bitte, dies zu entschuldigen.
 \input{bambus.cfdg.tex}
+
+\chapter{Beispielausgaben}
+
+To be continued. % TODO Fertigmachen!!!
 \end{document}
