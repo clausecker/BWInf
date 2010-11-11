@@ -1,0 +1,11 @@
+#Ausgabedateien
+*.svg
+*.png
+
+#Dokumentation
+doc/*.cfdg.tex
+doc/*.toc
+doc/*.aux
+doc/*.log
+doc/*.pdf
+doc/definitions.tex

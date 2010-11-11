@@ -1,33 +1,28 @@
-//Diese Regel erzeugt einen Stamm.
 startshape basis
 
 rule basis {
   bambus {}
 }
 
-//Einfacher Stamm
-rule bambus 0.5 {
+rule bambus 0.5 { //Einfacher Stamm
   stamm { }
   bambus {y 1.05 size 0.9 } //Nächstes Stück andocken
 }
 
-//Ein Ast rechts
-rule bambus 0.25 {
+rule bambus 0.25 { //Ein Ast rechts
   zweigr {}
   //Weiterführung des Stamms
   bambus [ x -0.0275 y 0.94387514 rotate  29.411984396 y 0.05 size 0.9]
   bambus [ x  0.0975 y 0.94387514 rotate -63.896118741 y 0.05 size 0.5] //Ast
 }
 
-//Ein Ast links, wie oben
-rule bambus 0.25 {
+rule bambus 0.25 { //Ein Ast links, wie oben
   zweigl {}
   bambus [x  0.0275 y 0.94387514 rotate -29.411984396 y 0.05 size 0.9]
   bambus [x -0.0975 y 0.94387514 rotate  63.896118741 y 0.05 size 0.5]
 }
 
-//Zweigstück, Zweig rechts.
-path zweigr {
+path zweigr { //Zweigstück, Zweig rechts.
   MOVETO { x -0.125 y 0 }
   LINETO { x -0.125 y 0.887750279 }
   LINETO { x  0.07  y 1 }
@@ -36,8 +31,7 @@ path zweigr {
   CLOSEPOLY {}
 }
 
-//Zweigstück, Zweig links
-path zweigl {
+path zweigl { //Zweigstück, Zweig links
   MOVETO { x -0.125 y 0 }
   LINETO { x -0.125 y 0.887750279 }
   LINETO { x -0.07  y 1 }
@@ -46,7 +40,7 @@ path zweigl {
   CLOSEPOLY {}
 }
 
-path stamm {
+path stamm { //Im wesentlichen ein langes Rechteck.
   MOVETO { x -0.125 y 0 }
   LINETO { x -0.125 y 1 }
   LINETO { x  0.125 y 1 }

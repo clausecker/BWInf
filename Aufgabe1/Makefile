@@ -2,8 +2,11 @@
 
 all: examples doc
 
-doc: ; #Noch nicht fertig
-doc-clean: ;
+doc:
+	$(MAKE) -C doc/ doc
+
+doc-clean:
+	$(MAKE) -C doc/ clean
 
 examples:
 	$(MAKE) -C dist/ examples
