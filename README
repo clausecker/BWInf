@@ -1,0 +1,31 @@
+Informationen zur Einsendung
+============================
+
+Die Einsendung wurde von Alexandra Piloth und Robert Clausecker erstellt.
+
+Alle Aufgaben haben jeweils ein Makefile, dass die Programme und die dazugehö-
+rige Dokumentation baut.
+
+Informationen zum Compilieren
+=============================
+
+Zum Bau der Aufgaben sind folgende Programme nötig: (Eventuell unvollständig)
+
+ * LaTeX
+ * CFDG
+ * Pygmentize
+ * GHC
+ * Cabal
+
+Weiterhin ist es möglich, einen anderen Compiler zu verwenden, oder ohne Cabal
+zu kompilieren.
+
+Das Makfile im Wurzelverzeichnis der einzelnen Aufgaben kennt zumindest folgende
+Befehle, die selbsterklärend sind:
+
+ * all
+ * clean
+ * build
+ * build-clean
+ * doc
+ * doc-clean
