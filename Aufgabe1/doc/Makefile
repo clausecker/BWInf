@@ -2,6 +2,11 @@
 
 HIGHLIGHTED_FILES = bambus.cfdg.tex
 
+EXAMPLES = ABCDE.png\
+           MYNDFT.png\
+           YNXDOB.png\
+           CUQLOE.png
+
 PYGMENTIZE = pygmentize
 STYLE = borland
 PYGMENTIZE_OPTS = -O linenos -l text
@@ -13,7 +18,7 @@ PDFLATEX_OPTS = -halt-on-error
 doc: doc.pdf
 
 #Der log wird auch nach doc.log ausgegeben...
-doc.pdf: doc.toc definitions.tex $(HIGHLIGHTED_FILES)
+doc.pdf: doc.toc definitions.tex $(HIGHLIGHTED_FILES) examples
 	$(PDFLATEX) $(PDFLATEX_OPTS) doc.tex > /dev/null
 
 #Die Datei muss zweimal gebaut werden, um das Inhaltsverzeichnis darzustellen
@@ -24,10 +29,13 @@ doc.toc: doc.tex definitions.tex $(HIGHLIGHTED_FILES)
 definitions.tex:
 	$(PYGMENTIZE) -S $(STYLE) -f tex > $@
 
-.PHONY: clean doc
+.PHONY: clean doc examples
 
 clean:
 	$(RM) *.pdf *.hs.tex *.aux *.log definitions.tex *.toc
 
 %.cfdg.tex: ../src/%.cfdg
 	$(PYGMENTIZE) $(PYGMENTIZE_OPTS) -o $@ $<
+
+examples:
+	make -C ../dist/ $(EXAMPLES)

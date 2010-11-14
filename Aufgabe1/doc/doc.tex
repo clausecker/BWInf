@@ -6,8 +6,9 @@
 \usepackage{fancyvrb}
 \usepackage{xcolor}
 \usepackage{textcomp}
+\usepackage{graphicx}
 
-\author {Team "`Herder"' -- Robert Clausecker}
+\author {Team "`Herder"' -- Alexandra Piloth, Robert Clausecker}
 \title {L"osung zur Aufgabe 1}
 \subtitle {des 29. Bundeswettbewerbs Informatik}
 
@@ -58,8 +59,8 @@ Formen erzeugen:
   \emph{zweig}.} Der Pfad ist nach geometrischen Prinzipien konzipiert, die ich
   weiter unten erkl"are.  Er erzeugt einen auf 50\,\% skalierten Ast nach rechts
   und f"uhrt den Stamm mit der gleichen Skalierung wie auch beim Stamm (90\,\%)
-  weiter.  Der Ast hat eine Drehung von c.\,a. 64\textdegree nach rechts, der
-  Stamm wird um etwa 29\textdegree nach rechts gedreht.  Diese Form erscheint
+  weiter.  Der Ast hat eine Drehung von c.\,a. 64\textdegree\ nach rechts, der
+  Stamm wird um etwa 29\textdegree\ nach rechts gedreht.  Diese Form erscheint
   mit einer Wahrscheinlichkeit von 25\,\%.
 
 \item[Ast links] Diese Form erzeugt einen Ast nach links und ist eine genaue
@@ -69,7 +70,21 @@ Formen erzeugen:
 
 \section{Das T-St"uck}
 
-To be continued. % TODO Fertigmachen!!!
+Das T-St"uck ist nach einer einfachen geometrischen Idee entstanden.  Ich wollte
+gerne eine Verzweigung haben, die folgende Charakteristiken aufweist:
+\begin{itemize}
+\item Beide Abzweigungen sollen auf der gleichen H"ohe beginnen.
+\item Die eine Abzweigung soll 90\,\% vom Stamm messen, die andere 50,\%
+\end{itemize}
+Ich habe daraufhin die gew"unschte Form mithilfe des Geometrieprogramms \emph
+{Geogebra} erstellt.  Die Ma"se des T-St"uckes sind direkt daraus in die Datei
+"ubertragen worden.  Die geometrische Konstruktion des T-St"uckes finden Sie im
+Verzeichnis \emph{src} des Projektordners.
+
+\section{Farben}
+
+Um die N"ahe zur chinesischen Tuschemalerei zu bewahren und vorallem aus
+mangelnder Zeit habe ich auf Farben verzichtet.
 
 \chapter{Quelltext (bambus.cfdg)}
 
@@ -82,5 +97,17 @@ Ich bitte, dies zu entschuldigen.
 
 \chapter{Beispielausgaben}
 
-To be continued. % TODO Fertigmachen!!!
+Die folgenden Beispiele wurden aus der Regeldatei \emph{bambus.cfdg} erstellt.
+Sie sind eine Auswahl derer, die als Beispiele erstellt werden:
+
+\begin{tabular}{cc}
+\includegraphics[width=7cm,height=7cm]{../dist/ABCDE.png}  &
+\includegraphics[width=7cm,height=7cm]{../dist/MYNDFT.png} \\
+Beispiel 1: Regel "`ABCDE"' &
+Beispiel 2: Regel "`MYNDFT"' \\
+\includegraphics[width=7cm,height=7cm]{../dist/YNXDOB.png} &
+\includegraphics[width=7cm,height=7cm]{../dist/CUQLOE.png} \\
+Beispiel 3: Regel "`YNXDOB"' &
+Beispiel 4: Regel "`CUQLOE"'
+\end{tabular}
 \end{document}

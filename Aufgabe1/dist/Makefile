@@ -6,6 +6,8 @@ CFDG = cfdg
 #Die Variablen WIDTH und HEIGHT können optional gesetzt werden.
 CFDGFLAGS = -q $(if $(WIDTH) , -w $(WIDTH)) $(if $(HEIGHT) , -h $(HEIGHT))
 SHELL = /bin/sh
+export WIDTH = 1000
+export HEIGHT = 1000
 
 #Flags zum erzeugen von PNG's oder SVG's
 SVG_FLAG = -V
