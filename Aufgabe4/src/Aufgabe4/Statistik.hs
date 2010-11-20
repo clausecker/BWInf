@@ -3,7 +3,6 @@
 module Aufgabe4.Statistik (
   bewerteKartenspiel,
   getKandidaten,
-  punkte,
   macheZug
 ) where
 
@@ -38,15 +37,6 @@ kombinationen =
     ,Right (Karte5,Karte6)] -- 11
   , [Right (Karte3,Karte9), Right (Karte4,Karte8), Right (Karte5,Karte7)]]-- 12
 
--- Berechnet die Anzahl der Punkte, die ein Kartenspiel bringt.
-punkte :: Kartenspiel -> Int
-punkte ks = case ks of
-  (Kartenspiel k1 k2 k3 k4 k5 k6 k7 k8 k9) -> punkte' 0 1 lst where
-    lst = [k1,k2,k3,k4,k5,k6,k7,k8,k9]
-    punkte' n !_ [] = n
-    punkte' n  k (False:xs) = punkte' (n + k) (k + 1) xs
-    punkte' n  k (True:xs)  = punkte' n       (k + 1) xs
-
 {-
 Die Nachfolgende Funktion ist die Kernfunktion des Programms.  Sie berechnet den
 zu erwartenden Durchschnittswert eines Kartenspiels.  Die Idee ist, dass für
@@ -70,7 +60,7 @@ bewertungsCache = listArray arrRange werte where
 bewerteKartenspiel, baueCache :: Kartenspiel -> Double
 bewerteKartenspiel = (bewertungsCache !)
 
-baueCache !spiel = sum gewichteteWertungen where
+baueCache spiel = sum gewichteteWertungen where
   bewertungen = map (snd . getKandidaten spiel) [2..12]
   besteBewertungen    = map getBest bewertungen where
     getBest [] = fromIntegral $ punkte spiel -- wenn es keine Möglichkeit gibt,

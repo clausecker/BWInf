@@ -4,8 +4,8 @@ module Main (
   main
 ) where
 
-import Aufgabe4.IO
 import Aufgabe4.Datentypen (Kartenspiel,startaufstellung)
+import Aufgabe4.IO
 
 import System.Console.GetOpt
 import System.Environment (getArgs)

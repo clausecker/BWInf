@@ -1,5 +1,5 @@
 -- Modul zur Ein- und Ausgabe. Keine der Funktionen führt wirkliches IO aus.
-{-# LANGUAGE BangPatterns #-}
+{-# OPTIONS_JHC -p containers -p mtl #-}
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
@@ -26,9 +26,9 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.
 computerSpiel :: Kartenspiel -> State StdGen Int
-computerSpiel !ks = do
+computerSpiel ks = do
   let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
-  auge1 <- random16
+  auge1 <- ks `seq` random16
   auge2 <- random16
   let ks' = macheZug (auge1 + auge2) ks
   maybe (return $ punkte ks) computerSpiel ks' -- Nothing, wenn Spiel zu Ende.
@@ -56,8 +56,8 @@ spielauswertung :: Kartenspiel -> Int -> StdGen -> String
 spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
                        | otherwise = fst . ($g). runState $ do
   let n'           = fromIntegral n :: Double -- Hilfsfunktionen
-      iterateM 0 _ !x = return x -- Wendet eine (monadische) Funktion n mal an.
-      iterateM i f !x = f x >>= iterateM (i - 1) f
+      iterateM 0 _ x = x `seq` return x -- Wendet eine (monadische) Funktion
+      iterateM i f x = x `seq` f x >>= iterateM (i - 1) f -- n mal an.
       schritt st = do -- Diese Funktion führt ein Spiel aus und fügt es in die
         wertung <- computerSpiel ks -- Liste ein.
         return (Map.insertWith' (+) wertung 1 st)
