@@ -20,8 +20,8 @@ Zum Bau der Aufgaben sind folgende Programme nötig: (Eventuell unvollständig)
 Weiterhin ist es möglich, einen anderen Compiler zu verwenden, oder ohne Cabal
 zu kompilieren.
 
-Das Makfile im Wurzelverzeichnis der einzelnen Aufgaben kennt zumindest folgende
-Befehle, die selbsterklärend sind:
+Das Makefile im Wurzelverzeichnis der einzelnen Aufgaben kennt zumindest fol-
+gende Befehle, die selbsterklärend sind:
 
  * all
  * clean
@@ -29,3 +29,11 @@ Befehle, die selbsterklärend sind:
  * build-clean
  * doc
  * doc-clean
+
+Hinweise zum Upload
+===================
+
+Das Repository wurde nach Abschluss des Wettbewerbes hochgeladen, in der Ab-
+sicht, dass es anderen nütlich seien könnte.  Sollte es irgendwelche Fragen
+geben, so schreiben Sie mit bitte.  Ich gebe keine Unterstützung für das
+Projekt.
