@@ -1,5 +1,6 @@
 -- Modul zur Ein- und Ausgabe. Keine der Funktionen führt wirkliches IO aus.
-{-# OPTIONS_JHC -p containers -p mtl #-}
+{-# OPTIONS_JHC -p containers #-}
+{-# LANGUAGE CPP #-}
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
@@ -10,7 +11,11 @@ import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
 import qualified Data.Map as Map
-import Control.Monad.State.Strict
+#ifdef __GLASGOW_HASKELL__
+import Control.Monad.State.Strict (State(..), runState)
+#else
+import StrictState (State(..), runState)
+#endif
 
 import System.Random
 import Text.Printf (printf)
@@ -44,8 +49,8 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
   showAuswahl (Right (a,b)) = show (fromEnum a+1) ++ ", " ++ show (fromEnum b+1)
   ratings     = kandidaten >>= kandidatenliste
   kandidatenliste (n,lst) | x `notElem` [1,n] = "" -- 1: Nicht spezifizieren
-                          | otherwise = (printf "Würfelergebnis %2d\n  \
-    \Erwartungswert: %2f\n  Kandidaten:\n%s\n" n ew liste) where
+                          | otherwise = (printf ("Würfelergebnis %2d\n  " ++
+    "Erwartungswert: %2f\n  Kandidaten:\n%s\n") n ew liste) where
     ew | null lst  = fromIntegral $ punkte ks
        | otherwise = maximum $ map snd lst
     liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
@@ -68,9 +73,9 @@ spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
       zusammen     = zipWith (\(x,a) r -> (x,(a::Int),r)) anzahlen relAnzahlen
       durchschnitt = sum $ map
         (\(x,a) -> fromIntegral x * fromIntegral a / n') anzahlen
-      msg1 = printf "Statistik aus %d Spielen:\n\
-         \Durchschnittliches Ergebnis: %f\n\
-         \Verteilung der Ergebnisse:\n" n durchschnitt
+      msg1 = printf ("Statistik aus %d Spielen:\n" ++
+         "Durchschnittliches Ergebnis: %f\n" ++
+         "Verteilung der Ergebnisse:\n") n durchschnitt
       -- Wie auch oben: x: Ergebnisnummer, a: Anzahl, r: relative Anzahl
       msg2 = zusammen >>= \(x,a,r) -> printf "\t%2d: %7d (%5.2f%%)\n" x a r
   return (msg1 ++ msg2)
