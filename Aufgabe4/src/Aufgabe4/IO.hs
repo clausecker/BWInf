@@ -1,6 +1,4 @@
 -- Modul zur Ein- und Ausgabe. Keine der Funktionen führt wirkliches IO aus.
-{-# OPTIONS_JHC -p containers #-}
-{-# LANGUAGE CPP #-}
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
@@ -11,11 +9,8 @@ import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
 import qualified Data.Map as Map
-#ifdef __GLASGOW_HASKELL__
-import Control.Monad.State.Strict (State(..), runState)
-#else
-import StrictState (State(..), runState)
-#endif
+import Data.Bits
+import StrictState (State(..)) --Ersatz für Control.Monad.State.Strict
 
 import System.Random
 import Text.Printf (printf)
@@ -25,7 +20,7 @@ parseKartenspiel :: String -> Kartenspiel
 parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
                         | otherwise                      = error errorMsg where
   resultat = foldl addKarte spielende eingabeAlsKarte
-  eingabeAlsKarte = map (toEnum . (subtract 1) . read . (:[])) karten
+  eingabeAlsKarte = map (bit . (subtract 1) . read . (:[])) karten
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird

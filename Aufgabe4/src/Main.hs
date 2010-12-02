@@ -1,5 +1,4 @@
 -- Hauptmodul, parst Argumente und ruft die nötigen Funktion auf.
-{-#LANGUAGE BangPatterns #-}
 module Main (
   main
 ) where

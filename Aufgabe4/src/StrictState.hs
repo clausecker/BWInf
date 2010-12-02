@@ -24,8 +24,7 @@
 -- shortend version to make this compile with jhc.
 
 module StrictState (
-    State(..),
-    runState
+    State(..)
   ) where
 
 -- ---------------------------------------------------------------------------

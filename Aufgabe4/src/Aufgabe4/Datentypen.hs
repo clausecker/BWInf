@@ -1,7 +1,11 @@
+-- Wir verstecken den häßlichen Kram in diesem Modul.
 module Aufgabe4.Datentypen (
   Kartenspiel,
-  Karte (..),
+  Karte,
   Auswahl,
+  karte1, karte2, karte3,
+  karte4, karte5, karte6,
+  karte7, karte8, karte9,
   startaufstellung,
   spielende,
   auswahlAnwendbar,
@@ -29,24 +33,31 @@ startaufstellung, spielende :: Kartenspiel
 startaufstellung = 1023
 spielende = 0
 
-data Karte
-  = Karte1 | Karte2 | Karte3
-  | Karte4 | Karte5 | Karte6
-  | Karte7 | Karte8 | Karte9
- deriving (Enum)
+type Karte = Int
+
+karte1, karte2, karte3, karte4, karte5, karte6, karte7, karte8, karte9 :: Int
+karte1 = bit 0
+karte2 = bit 1
+karte3 = bit 2
+karte4 = bit 3
+karte5 = bit 4
+karte6 = bit 5
+karte7 = bit 6
+karte8 = bit 7
+karte9 = bit 8
 
 -- Möglichkeit, eine Karte auszuwählen.
 type Auswahl = Either Karte (Karte,Karte)
 
 -- existiert die Karte im Kartenspiel?
 haveKarte :: Karte -> Kartenspiel -> Bool
-haveKarte k ks = testBit ks (fromEnum k)
+haveKarte k ks = ks .&. k /= 0
 
 addKarte :: Kartenspiel ->  Karte -> Kartenspiel
-addKarte ks k = setBit ks (fromEnum k)
+addKarte ks k = ks .|. k
 
 removeKarte :: Karte -> Kartenspiel -> Kartenspiel -- Wird nur hier gebraucht,
-removeKarte k ks = clearBit ks (fromEnum k) -- so spar ich mir ein paar flips
+removeKarte k ks = (complement k) .&. ks -- so spar ich mir ein paar flips
 
 auswahlAnwendbar :: Kartenspiel -> Auswahl -> Bool
 auswahlAnwendbar spiel (Left karte) = haveKarte karte spiel

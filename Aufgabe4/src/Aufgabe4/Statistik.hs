@@ -1,5 +1,4 @@
 -- Dieses Modul enthält den statistischen Kram.
-{-# LANGUAGE BangPatterns #-}
 module Aufgabe4.Statistik (
   bewerteKartenspiel,
   getKandidaten,
@@ -20,22 +19,22 @@ wahrscheinlichkeitAugen =
 -- Liste alle Möglichkeiten, eine Augenzahl durch ein bis zwei Karten abzudecken
 kombinationen :: [[Auswahl]]
 kombinationen =
-  [ [Left   Karte2] -- 2
-  , [Right (Karte1,Karte2), Left   Karte3] -- 3
-  , [Right (Karte1,Karte3), Left   Karte4] -- 4
-  , [Right (Karte1,Karte4), Right (Karte2,Karte3), Left   Karte5] -- 5
-  , [Right (Karte1,Karte5), Right (Karte2,Karte4), Left   Karte6] -- 6
-  , [Right (Karte1,Karte6), Right (Karte2,Karte5), Right (Karte3,Karte4)
-    ,Left   Karte7] -- 7
-  , [Right (Karte1,Karte7), Right (Karte2,Karte6), Right (Karte3,Karte5)
-    ,Left   Karte8] -- 8
-  , [Right (Karte1,Karte8), Right (Karte2,Karte7), Right (Karte3,Karte6)
-    ,Right (Karte4,Karte5), Left   Karte9] -- 9
-  , [Right (Karte1,Karte9), Right (Karte2,Karte8), Right (Karte3,Karte7)
-    ,Right (Karte4,Karte6)] -- 10
-  , [Right (Karte2,Karte9), Right (Karte3,Karte8), Right (Karte4,Karte7)
-    ,Right (Karte5,Karte6)] -- 11
-  , [Right (Karte3,Karte9), Right (Karte4,Karte8), Right (Karte5,Karte7)]]-- 12
+  [ [Left   karte2] -- 2
+  , [Right (karte1,karte2), Left   karte3] -- 3
+  , [Right (karte1,karte3), Left   karte4] -- 4
+  , [Right (karte1,karte4), Right (karte2,karte3), Left   karte5] -- 5
+  , [Right (karte1,karte5), Right (karte2,karte4), Left   karte6] -- 6
+  , [Right (karte1,karte6), Right (karte2,karte5), Right (karte3,karte4)
+    ,Left   karte7] -- 7
+  , [Right (karte1,karte7), Right (karte2,karte6), Right (karte3,karte5)
+    ,Left   karte8] -- 8
+  , [Right (karte1,karte8), Right (karte2,karte7), Right (karte3,karte6)
+    ,Right (karte4,karte5), Left   karte9] -- 9
+  , [Right (karte1,karte9), Right (karte2,karte8), Right (karte3,karte7)
+    ,Right (karte4,karte6)] -- 10
+  , [Right (karte2,karte9), Right (karte3,karte8), Right (karte4,karte7)
+    ,Right (karte5,karte6)] -- 11
+  , [Right (karte3,karte9), Right (karte4,karte8), Right (karte5,karte7)]]-- 12
 
 {-
 Die Nachfolgende Funktion ist die Kernfunktion des Programms.  Sie berechnet den
