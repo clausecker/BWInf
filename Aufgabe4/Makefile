@@ -12,6 +12,8 @@ build:
 	$(CABAL) configure
 	$(CABAL) build
 
+build-jhc:
+	$(MAKE) -C src
 build-clean:
 	$(CABAL) clean
 
