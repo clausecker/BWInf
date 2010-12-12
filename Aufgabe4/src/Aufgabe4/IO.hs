@@ -10,8 +10,7 @@ import Aufgabe4.Statistik
 
 import qualified Data.Map as Map
 import Data.Bits
-import StrictState (State(..)) --Ersatz für Control.Monad.State.Strict
-
+import Control.Monad.State.Strict (State(..))
 import System.Random
 import Text.Printf (printf)
 
