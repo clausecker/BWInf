@@ -30,7 +30,7 @@ punkte karten = punkte' karten 1 0 where
 
 -- Häufig gebrauchte Werte
 startaufstellung, spielende :: Kartenspiel
-startaufstellung = 1023
+startaufstellung = 511
 spielende = 0
 
 type Karte = Int
