@@ -9,6 +9,7 @@ import Aufgabe4.IO
 import System.Console.GetOpt
 import System.Environment (getArgs)
 import System.Random
+import Control.Monad.State.Strict
 
 data Modus
   = Hilfe
@@ -63,4 +64,4 @@ main = do
   case funktion of
     Hilfe -> putStrLn hilfe
     Analysiere -> putStrLn $ schoeneAnalyse zustand n
-    SpieleAutomatisch -> getStdGen >>= putStrLn . spielauswertung zustand n
+    SpieleAutomatisch -> getStdGen >>= putStrLn . fst . runState (spielauswertung zustand n)

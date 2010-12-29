@@ -39,8 +39,7 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules: StrictState Aufgabe4.Statistik Aufgabe4.Datentypen
-               Aufgabe4.IO
+other-modules: Aufgabe4.Statistik Aufgabe4.Datentypen Aufgabe4.IO
 ghc-prof-options:
 ghc-shared-options:
 ghc-options: -O3 -Wall -Werror

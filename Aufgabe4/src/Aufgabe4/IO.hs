@@ -1,4 +1,5 @@
 -- Modul zur Ein- und Ausgabe. Keine der Funktionen führt wirkliches IO aus.
+{-# LANGUAGE TupleSections #-}
 module Aufgabe4.IO (
   parseKartenspiel,
   schoeneAnalyse,
@@ -8,11 +9,13 @@ module Aufgabe4.IO (
 import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
-import qualified Data.Map as Map
 import Data.Bits
-import Control.Monad.State.Strict (State(..))
 import System.Random
 import Text.Printf (printf)
+
+import Control.Monad.State.Strict (State(..))
+import Control.Monad (replicateM)
+import Data.Array.Unboxed
 
 -- Eingabeformat: Siehe Dokumentation.
 parseKartenspiel :: String -> Kartenspiel
@@ -50,26 +53,26 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
     liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
       (showAuswahl k ++ ",") r) :: String
 
--- Funktion führt n Spiele aus und gibt ein Resultat zurück
-spielauswertung :: Kartenspiel -> Int -> StdGen -> String
-spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
-                       | otherwise = fst . ($g). runState $ do
-  let n'           = fromIntegral n :: Double -- Hilfsfunktionen
-      iterateM 0 _ x = x `seq` return x -- Wendet eine (monadische) Funktion
-      iterateM i f x = x `seq` f x >>= iterateM (i - 1) f -- n mal an.
-      schritt st = do -- Diese Funktion führt ein Spiel aus und fügt es in die
-        wertung <- computerSpiel ks -- Liste ein.
-        return (Map.insertWith' (+) wertung 1 st)
-  -- Der nachfolgende Block berechnet die gesamte Statistik.
-  werteliste <- iterateM n schritt Map.empty
-  let anzahlen     = Map.toList werteliste
-      relAnzahlen  = map (\(_,a) -> fromIntegral a / n' * 100) anzahlen
-      zusammen     = zipWith (\(x,a) r -> (x,(a::Int),r)) anzahlen relAnzahlen
-      durchschnitt = sum $ map
-        (\(x,a) -> fromIntegral x * fromIntegral a / n') anzahlen
-      msg1 = printf ("Statistik aus %d Spielen:\n" ++
-         "Durchschnittliches Ergebnis: %f\n" ++
-         "Verteilung der Ergebnisse:\n") n durchschnitt
-      -- Wie auch oben: x: Ergebnisnummer, a: Anzahl, r: relative Anzahl
-      msg2 = zusammen >>= \(x,a,r) -> printf "\t%2d: %7d (%5.2f%%)\n" x a r
-  return (msg1 ++ msg2)
+-- Die Auswertung gliedert sich in zwei Teile: Im ersten werden die Ergebnisse
+-- eingesammelt, im zweiten wird die Statistik übersichtlich zusammengefasst
+-- ausgegeben.
+spielauswertung :: Kartenspiel -> Int -> State StdGen String
+spielauswertung ks n = spieleNmal ks n >>= return . baueErgebnisse n
+
+spieleNmal :: Kartenspiel -> Int -> State StdGen (UArray Int Int)
+spieleNmal ks x = spiele >>= return . baueArray where
+  spiele = replicateM x (computerSpiel ks >>= return . (,()))
+  baueArray = accumArray (const . (+1)) 0 (2,45)
+
+baueErgebnisse :: Int -> UArray Int Int -> String
+baueErgebnisse n werteliste = zusammenfassung ++ details where
+  n'           = fromIntegral n :: Double
+  anzahlen     = filter ((/=0) . snd) $ assocs werteliste
+  relAnzahlen  = map (\(_,a) -> fromIntegral a / n' * 100) anzahlen
+  zusammen     = zipWith (\(x,a) r -> (x,a,r)) anzahlen relAnzahlen
+  durchschnitt = sum $ map
+    (\(x,a) -> fromIntegral x * fromIntegral a / n') anzahlen
+  zusammenfassung = printf ("Statistik aus %d Spielen:\nDurchschnittliches \
+    \Ergebnis: %f\nVerteilung der Ergebnisse:\n") n durchschnitt
+  -- Wie auch oben: x: Ergebnisnummer, a: Anzahl, r: relative Anzahl
+  details = zusammen >>= \(x,a,r) -> printf "\t%2d: %7d (%5.2f%%)\n" x a r
