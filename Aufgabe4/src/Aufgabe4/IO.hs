@@ -10,7 +10,7 @@ import Aufgabe4.Datentypen
 import Aufgabe4.Statistik
 
 import Data.Bits
-import System.Random
+import Random.Xorshift
 import Text.Printf (printf)
 
 import Control.Monad.State.Strict (State(..))
@@ -27,7 +27,7 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.
-computerSpiel :: Kartenspiel -> State StdGen Int
+computerSpiel :: Kartenspiel -> State Xorshift Int
 computerSpiel ks = do
   let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
   auge1 <- ks `seq` random16
@@ -56,10 +56,10 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
 -- Die Auswertung gliedert sich in zwei Teile: Im ersten werden die Ergebnisse
 -- eingesammelt, im zweiten wird die Statistik übersichtlich zusammengefasst
 -- ausgegeben.
-spielauswertung :: Kartenspiel -> Int -> State StdGen String
+spielauswertung :: Kartenspiel -> Int -> State Xorshift String
 spielauswertung ks n = spieleNmal ks n >>= return . baueErgebnisse n
 
-spieleNmal :: Kartenspiel -> Int -> State StdGen (UArray Int Int)
+spieleNmal :: Kartenspiel -> Int -> State Xorshift (UArray Int Int)
 spieleNmal ks x = spiele >>= return . baueArray where
   spiele = replicateM x (computerSpiel ks >>= return . (,()))
   baueArray = accumArray (const . (+1)) 0 (2,45)

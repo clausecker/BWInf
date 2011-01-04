@@ -7,7 +7,7 @@ license-file: ""
 copyright:
 maintainer:
 build-depends: array -any, base >=4.0.0, containers -any, mtl -any,
-               random -any
+               random -any, xorshift -any
 stability:
 homepage:
 package-url:
