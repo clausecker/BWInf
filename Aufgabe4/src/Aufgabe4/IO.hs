@@ -11,7 +11,7 @@ import Aufgabe4.Statistik
 import qualified Data.Map as Map
 import Data.Bits
 import Control.Monad.State.Strict (State(..))
-import System.Random
+import Random.Xorshift
 import Text.Printf (printf)
 
 -- Eingabeformat: Siehe Dokumentation.
@@ -24,7 +24,7 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
 -- mit dem neuen Generator zurückgegeben.
-computerSpiel :: Kartenspiel -> State StdGen Int
+computerSpiel :: Kartenspiel -> State Xorshift Int
 computerSpiel ks = do
   let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
   auge1 <- ks `seq` random16
@@ -51,7 +51,7 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
       (showAuswahl k ++ ",") r) :: String
 
 -- Funktion führt n Spiele aus und gibt ein Resultat zurück
-spielauswertung :: Kartenspiel -> Int -> StdGen -> String
+spielauswertung :: Kartenspiel -> Int -> Xorshift -> String
 spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
                        | otherwise = fst . ($g). runState $ do
   let n'           = fromIntegral n :: Double -- Hilfsfunktionen
