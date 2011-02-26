@@ -9,7 +9,6 @@ import Aufgabe4.IO
 import System.Console.GetOpt
 import System.Environment (getArgs)
 import Random.Xorshift
-import Control.Monad.State.Strict
 
 data Modus
   = Hilfe
@@ -64,4 +63,4 @@ main = do
   case funktion of
     Hilfe -> putStrLn hilfe
     Analysiere -> putStrLn $ schoeneAnalyse zustand n
-    SpieleAutomatisch -> newXorshift >>= putStrLn . fst . runState (spielauswertung zustand n)
+    SpieleAutomatisch -> newXorshift >>= putStrLn . spielauswertung zustand n
