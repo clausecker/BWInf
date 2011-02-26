@@ -13,7 +13,7 @@ import Data.Bits
 import Random.Xorshift
 import Text.Printf (printf)
 
-import Control.Monad.State.Strict (State(..))
+import Control.Monad.State.Strict (State,state)
 import Control.Monad (replicateM)
 import Data.Array.Unboxed
 
@@ -29,7 +29,7 @@ parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
 -- mit dem neuen Generator zurückgegeben.
 computerSpiel :: Kartenspiel -> State Xorshift Int
 computerSpiel ks = do
-  let random16 = State $ randomR (1,6) -- Der Generator ist der Zustand
+  let random16 = state $ randomR (1,6) -- Der Generator ist der Zustand
   auge1 <- ks `seq` random16
   auge2 <- random16
   let ks' = macheZug (auge1 + auge2) ks
