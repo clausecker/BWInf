@@ -9,8 +9,8 @@ all: doc build
 clean: build-clean doc-clean
 
 build:
-	$(CABAL) configure
-	$(CABAL) build
+	$(CABAL) configure $(CABALFLAGS)
+	$(CABAL) build $(CABALFLAGS)
 
 build-jhc:
 	$(MAKE) -C src
