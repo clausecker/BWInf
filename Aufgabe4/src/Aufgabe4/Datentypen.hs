@@ -57,7 +57,7 @@ addKarte :: Kartenspiel ->  Karte -> Kartenspiel
 addKarte ks k = ks .|. k
 
 removeKarte :: Karte -> Kartenspiel -> Kartenspiel -- Wird nur hier gebraucht,
-removeKarte k ks = (complement k) .&. ks -- so spar ich mir ein paar flips
+removeKarte k ks = complement k .&. ks -- so spar ich mir ein paar flips
 
 auswahlAnwendbar :: Kartenspiel -> Auswahl -> Bool
 auswahlAnwendbar spiel (Left karte) = haveKarte karte spiel

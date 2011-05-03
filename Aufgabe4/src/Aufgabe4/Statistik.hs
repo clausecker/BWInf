@@ -8,7 +8,7 @@ module Aufgabe4.Statistik (
 import Aufgabe4.Datentypen
 import Data.Array
 import Data.List (maximumBy)
-import Data.Function (on)
+import Data.Ord (comparing)
 
 -- Liste der Wahrscheinlichkeiten der Augen zweier Würfel
 wahrscheinlichkeitAugen :: [Double]
@@ -86,4 +86,4 @@ baueZugCache :: (Int,Kartenspiel) -> Maybe Kartenspiel
 baueZugCache (augenzahl,ks) | null kand = Nothing
                             | otherwise = Just $ wendeAuswahlAn ks zug where
   kand    = uncurry zip $ getKandidaten ks augenzahl --Wenn null, dann Spielende
-  (zug,_) = maximumBy (compare `on` snd) kand
+  (zug,_) = maximumBy (comparing snd) kand

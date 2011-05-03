@@ -20,7 +20,7 @@ parseKartenspiel :: String -> Kartenspiel
 parseKartenspiel karten | all (`elem` ['1'..'9']) karten = resultat
                         | otherwise                      = error errorMsg where
   resultat = foldl addKarte spielende eingabeAlsKarte
-  eingabeAlsKarte = map (bit . (subtract 1) . read . (:[])) karten
+  eingabeAlsKarte = map (bit . subtract 1 . read . return) karten
   errorMsg = "Aufgabe4.IO.parseKartenspiel: Ungültige Eingabe"
 
 -- Lässt den Computer gegen sich selbst spielen.  Das Ergebnis des Spieles wird
@@ -40,16 +40,16 @@ schoeneAnalyse ks x | x < 1 || x > 12 = error msg
   "Erwartungswert: %f\n\n%s" (bewerteKartenspiel ks) ratings where
   msg         = "Aufgabe4.IO.schoeneAnalyse: Ungültiger Parameter n: " ++ show x
   kandidaten  = map (\n -> (n,uncurry zip $ getKandidaten ks n)) [2..12]
-  showAuswahl (Left k)      = show $ (fromEnum k + 1)
+  showAuswahl (Left k)      = show $ fromEnum k + 1
   showAuswahl (Right (a,b)) = show (fromEnum a+1) ++ ", " ++ show (fromEnum b+1)
   ratings     = kandidaten >>= kandidatenliste
   kandidatenliste (n,lst) | x `notElem` [1,n] = "" -- 1: Nicht spezifizieren
-                          | otherwise = (printf ("Würfelergebnis %2d\n  " ++
-    "Erwartungswert: %2f\n  Kandidaten:\n%s\n") n ew liste) where
+                          | otherwise = printf ("Würfelergebnis %2d\n  " ++
+    "Erwartungswert: %2f\n  Kandidaten:\n%s\n") n ew liste where
     ew | null lst  = fromIntegral $ punkte ks
        | otherwise = maximum $ map snd lst
-    liste = lst >>= \(k, r) -> (printf "    Auswahl %-5s Erwartung %2f\n"
-      (showAuswahl k ++ ",") r) :: String
+    liste = lst >>= \(k, r) -> printf "    Auswahl %-5s Erwartung %2f\n"
+      (showAuswahl k ++ ",") r :: String
 
 -- Funktion führt n Spiele aus und gibt ein Resultat zurück
 spielauswertung :: Kartenspiel -> Int -> Xorshift -> String
@@ -65,7 +65,7 @@ spielauswertung ks n g | n < 0 = error $ printf "Anzahl Spiele (%d) negativ." n
   werteliste <- iterateM n schritt Map.empty
   let anzahlen     = Map.toList werteliste
       relAnzahlen  = map (\(_,a) -> fromIntegral a / n' * 100) anzahlen
-      zusammen     = zipWith (\(x,a) r -> (x,(a::Int),r)) anzahlen relAnzahlen
+      zusammen     = zipWith (\(x,a) r -> (x, a::Int, r)) anzahlen relAnzahlen
       durchschnitt = sum $ map
         (\(x,a) -> fromIntegral x * fromIntegral a / n') anzahlen
       msg1 = printf ("Statistik aus %d Spielen:\n" ++
