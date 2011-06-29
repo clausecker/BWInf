@@ -34,6 +34,6 @@ Hinweise zum Upload
 ===================
 
 Das Repository wurde nach Abschluss des Wettbewerbes hochgeladen, in der
-Absicht, dass es anderen nütlich seien könnte.  Sollte es irgendwelche Fragen
+Absicht, dass es anderen nützlich seien könnte.  Sollte es irgendwelche Fragen
 geben, so schreiben Sie mit bitte.  Ich gebe keine Unterstützung für das
 Projekt.
